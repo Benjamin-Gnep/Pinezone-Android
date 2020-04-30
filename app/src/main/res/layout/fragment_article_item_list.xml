@@ -6,8 +6,9 @@
     android:name="com.example.pinezone.ui.home.ArticleItemFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.home.ArticleItemFragment"
-    tools:listitem="@layout/fragment_article_item" />
+    tools:listitem="@layout/fragment_article_item"
+    android:background="@color/white"
+    android:paddingTop="100dp"
+    android:paddingBottom="100dp"/>

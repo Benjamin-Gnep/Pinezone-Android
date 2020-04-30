@@ -1,16 +1,14 @@
 package com.example.pinezone;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.example.pinezone.ui.home.ArticleItemFragment;
-import com.example.pinezone.ui.home.dummy.DummyContent;
+import com.example.pinezone.ui.home.article.ArticleContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -56,7 +54,7 @@ public class MainActivity extends BasicActivity implements ArticleItemFragment.O
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(ArticleContent.Article item) {
 
     }
 }

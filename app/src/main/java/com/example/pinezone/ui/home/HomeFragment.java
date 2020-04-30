@@ -23,12 +23,17 @@ import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.ui.login.SplashActivity;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private HomeViewModel homeViewModel;
 
 
     private Button logoutButton;
+    private Button canteenButton;
+    private Button playButton;
+    private Button storeButton;
+    private Button studyButton;
+    private Button gymButton;
     private TextView homeText;
     private TextView selectionText;
     private SharedPreferences.Editor editor;
@@ -45,6 +50,11 @@ public class HomeFragment extends Fragment {
     private void initView(View root) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         logoutButton = root.findViewById(R.id.logout);
+        canteenButton = root.findViewById(R.id.home_canteen);
+        storeButton = root.findViewById(R.id.home_store);
+        playButton = root.findViewById(R.id.home_play);
+        studyButton = root.findViewById(R.id.home_study);
+        gymButton = root.findViewById(R.id.home_gym);
         homeText = root.findViewById(R.id.text_home);
         selectionText = root.findViewById(R.id.text_selection);
         homeViewModel.getHomeText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -64,18 +74,31 @@ public class HomeFragment extends Fragment {
         assert activity != null;
         pref = activity.getSharedPreferences();
         editor = pref.edit();
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                FragmentManager fragmentManager = activity.getSupportFragmentManager();
-//                FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                ArticleItemFragment articleItemFragment = new ArticleItemFragment();
-//                transaction.replace(R.id.nav_host_fragment,articleItemFragment);
-//                transaction.commit();
+        logoutButton.setOnClickListener(this);
+        canteenButton.setOnClickListener(this);
+        storeButton.setOnClickListener(this);
+        playButton.setOnClickListener(this);
+        studyButton.setOnClickListener(this);
+        gymButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        final MainActivity activity = (MainActivity) getActivity();
+        switch (v.getId()){
+            case R.id.logout:
                 editor.clear();
                 editor.apply();
                 ActivityCollector.finishAll();
-            }
-        });
+                break;
+            case R.id.home_canteen:
+                assert activity != null;
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                ArticleItemFragment articleItemFragment = new ArticleItemFragment();
+                transaction.replace(R.id.nav_host_fragment,articleItemFragment);
+                transaction.commit();
+                break;
+        }
     }
 }

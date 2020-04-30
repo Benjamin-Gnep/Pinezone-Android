@@ -7,15 +7,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pinezone.R;
-import com.example.pinezone.ui.home.dummy.DummyContent;
-import com.example.pinezone.ui.home.dummy.DummyContent.DummyItem;
+import com.example.pinezone.ui.home.article.ArticleContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ import java.util.List;
  * interface.
  */
 public class ArticleItemFragment extends Fragment {
+
+    private List<ArticleContent.Article> articleList = new ArrayList<>();
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -62,19 +65,41 @@ public class ArticleItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article_item_list, container, false);
-
+        initArticles();
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            mColumnCount = 2;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                recyclerView.setLayoutManager(new StaggeredGridLayoutManager
+                        (mColumnCount,StaggeredGridLayoutManager.VERTICAL));
             }
-            recyclerView.setAdapter(new MyArticleItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyArticleItemRecyclerViewAdapter(articleList, mListener));
         }
         return view;
+    }
+
+    private void initArticles() {
+        for(int i = 0;i < 3; i++){
+            ArticleContent.Article coffee = new ArticleContent.Article("1",
+                    "LuckinCoffee","detail","title",R.drawable.t5);
+            articleList.add(coffee);
+            ArticleContent.Article milktea = new ArticleContent.Article("2",
+                    "ALittleMilkTea","detail","title",R.drawable.t1);
+            articleList.add(milktea);
+            ArticleContent.Article soup = new ArticleContent.Article("3",
+                    "FujianLocalSoup","detail","title",R.drawable.t2);
+            articleList.add(soup);
+            ArticleContent.Article noodle = new ArticleContent.Article("4",
+                    "PorkNoodle","detail","title",R.drawable.t3);
+            articleList.add(noodle);
+            ArticleContent.Article jiaozi = new ArticleContent.Article("5",
+                    "ShaxianJiaozi","detail","title",R.drawable.t4);
+            articleList.add(jiaozi);
+        }
     }
 
 
@@ -107,6 +132,6 @@ public class ArticleItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(ArticleContent.Article item);
     }
 }
