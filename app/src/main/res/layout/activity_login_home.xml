@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.LoginHome"
+    android:theme="@style/AppThemeDark">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_bg_bit"/>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="152dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/illustration"/>
+
+    <Button
+        android:id="@+id/login_home_btn"
+        android:layout_width="240dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="152dp"
+        android:background="@drawable/button_circle_shape"
+        android:textColor="@color/white"
+        android:text="使用手机号登录"
+        android:drawableLeft="@drawable/ic_phone"
+        android:textSize="@dimen/H5"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp">
+    </Button>
+
+    <CheckBox
+        android:id="@+id/login_home_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:textSize="@dimen/annotation"
+        android:layout_marginBottom="64dp"
+        android:text="注册即代表你同意 《松果协议》和《隐私保护指引》" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

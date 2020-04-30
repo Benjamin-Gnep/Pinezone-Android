@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <ImageView
+        android:id="@+id/home_pet"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="120dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_selection"
+        android:src="@drawable/home_pet"
+        app:layout_constraintVertical_chainStyle="packed"
+        />
+
+    <TextView
+        android:id="@+id/text_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintBottom_toTopOf="@id/home_pet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:paddingBottom="@dimen/line3"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryLight"/>
+
+    <TextView
+        android:id="@+id/text_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_pet"
+        app:layout_constraintBottom_toTopOf="@id/home_canteen"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/line7"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryLight"/>
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="@id/home_pet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/button_circle_shape"
+        android:textColor="@color/white"
+        android:text="点此退出登录"
+        />
+
+    <!--button组-->
+
+    <Button
+        android:id="@+id/home_canteen"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintBottom_toTopOf="@id/text_canteen"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/home_store"
+        android:background="@drawable/button_line_shape"
+        android:drawableStart="@drawable/ic_canteen"
+        android:drawableLeft="@drawable/ic_canteen"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+
+    <Button
+        android:id="@+id/home_store"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/button_line_shape"
+        android:drawableStart="@drawable/ic_store"
+        android:drawableLeft="@drawable/ic_store"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_canteen"
+        app:layout_constraintRight_toLeftOf="@id/home_play" />
+
+    <Button
+        android:id="@+id/home_play"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_store"
+        app:layout_constraintRight_toLeftOf="@id/home_study"
+        android:background="@drawable/button_line_shape"
+        android:drawableStart="@drawable/ic_play"
+        android:drawableLeft="@drawable/ic_play"
+        android:paddingLeft="12dp"/>
+
+    <Button
+        android:id="@+id/home_study"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_play"
+        app:layout_constraintRight_toLeftOf="@id/home_gym"
+        android:background="@drawable/button_line_shape"
+        android:drawableStart="@drawable/ic_study"
+        android:drawableLeft="@drawable/ic_study" />
+
+    <Button
+        android:id="@+id/home_gym"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_study"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/button_line_shape"
+        android:drawableStart="@drawable/ic_gym"
+        android:drawableLeft="@drawable/ic_gym" />
+
+    <!--button组-->
+
+    <TextView
+        android:id="@+id/text_canteen"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/line1"
+        android:layout_marginBottom="120dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/text_store"
+        android:gravity="center"
+        android:text="食堂"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/text_store"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_canteen"
+        app:layout_constraintRight_toLeftOf="@id/text_play"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="探店"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/text_play"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_store"
+        app:layout_constraintRight_toLeftOf="@id/text_study"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="玩吧"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/text_study"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_play"
+        app:layout_constraintRight_toLeftOf="@id/text_gym"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="自习室"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/text_gym"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_study"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="健身房"
+        android:textColor="@color/colorPrimaryDark"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

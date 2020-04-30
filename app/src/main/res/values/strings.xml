@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">松果生活</string>
+    <string name="title_home">主页</string>
+    <string name="title_star">收藏</string>
+    <string name="title_notifications">消息</string>
+    <string name="title_mine">我的</string>
+</resources>
