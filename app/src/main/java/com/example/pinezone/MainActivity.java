@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.example.pinezone.ui.home.ArticleItemFragment;
-import com.example.pinezone.ui.home.article.ArticleContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.navigation.NavController;
@@ -14,7 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends BasicActivity implements ArticleItemFragment.OnListFragmentInteractionListener {
+public class MainActivity extends BasicActivity {
     private long exitTime = 0;
 
     @Override
@@ -51,10 +49,5 @@ public class MainActivity extends BasicActivity implements ArticleItemFragment.O
 
     public SharedPreferences getSharedPreferences() {
         return getSharedPreferences("config",MODE_PRIVATE);
-    }
-
-    @Override
-    public void onListFragmentInteraction(ArticleContent.Article item) {
-
     }
 }

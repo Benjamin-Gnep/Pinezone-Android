@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.article.ArticleListFragment;
 import com.example.pinezone.ui.login.SplashActivity;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -95,8 +96,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 assert activity != null;
                 FragmentManager fragmentManager = activity.getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                ArticleItemFragment articleItemFragment = new ArticleItemFragment();
-                transaction.replace(R.id.nav_host_fragment,articleItemFragment);
+                ArticleListFragment articleListFragment = new ArticleListFragment();
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
                 transaction.commit();
                 break;
         }
