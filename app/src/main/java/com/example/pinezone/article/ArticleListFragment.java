@@ -77,15 +77,15 @@ public class ArticleListFragment extends Fragment {
     public List<Article> getArticleList(){
         List<Article> articleList = new ArrayList<>();
         for(int i = 0;i < 3; i++){
-            Article coffee = new Article("LuckinCoffee",R.drawable.t5);
+            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
             articleList.add(coffee);
-            Article milktea = new Article("ALittleMilkTea",R.drawable.t1);
+            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
             articleList.add(milktea);
-            Article soup = new Article("FujianLocalSoup",R.drawable.t2);
+            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
             articleList.add(soup);
-            Article noodle = new Article("PorkNoodle",R.drawable.t3);
+            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
             articleList.add(noodle);
-            Article jiaozi = new Article("ShaxianJiaozi",R.drawable.t4);
+            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
             articleList.add(jiaozi);
         }
         return articleList;

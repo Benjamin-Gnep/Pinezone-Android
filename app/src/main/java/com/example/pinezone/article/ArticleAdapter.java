@@ -1,18 +1,15 @@
 package com.example.pinezone.article;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pinezone.R;
@@ -43,6 +40,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         Article article = articleList.get(position);
         holder.articleTitle.setText(article.getTitle());
         holder.articleImage.setImageResource(article.getImage());
+        holder.authorImage.setImageResource(R.drawable.user);
     }
 
     @Override
@@ -53,20 +51,28 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView articleImage;
         TextView articleTitle;
+        ImageView authorImage;
+        TextView authorName;
+        Button likeButton;
 
         public ViewHolder(View view,ViewGroup group){
             super(view);
             articleTitle = view.findViewById(R.id.article_title);
             articleImage = view.findViewById(R.id.article_image);
+            authorImage = view.findViewById(R.id.article_author_image);
+            authorName = view.findViewById(R.id.article_author_name);
+            likeButton = view.findViewById(R.id.like_button);
+
+
             Resources resources = group.getResources();
             //获取屏幕数据
             DisplayMetrics displayMetrics = resources.getDisplayMetrics();
             //获取屏幕宽高，单位是像素
-            int widthPixels = displayMetrics.widthPixels/2;
+            int widthPixels = displayMetrics.widthPixels/40*19;
             ViewGroup.LayoutParams lp = articleImage.getLayoutParams();
             lp.width = widthPixels;
             lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-           articleImage.setLayoutParams(lp);
+            articleImage.setLayoutParams(lp);
         }
     }
 
