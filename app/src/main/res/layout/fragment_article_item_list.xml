@@ -10,5 +10,4 @@
     tools:context=".ui.home.ArticleItemFragment"
     tools:listitem="@layout/fragment_article_item"
     android:background="@color/white"
-    android:paddingTop="100dp"
-    android:paddingBottom="100dp"/>
+    android:paddingBottom="56dp"/>

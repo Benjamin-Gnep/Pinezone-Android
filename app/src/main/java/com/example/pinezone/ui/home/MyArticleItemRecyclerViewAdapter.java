@@ -2,6 +2,9 @@ package com.example.pinezone.ui.home;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,10 @@ import com.example.pinezone.ui.home.article.ArticleContent;
 
 import java.util.List;
 
+
 public class MyArticleItemRecyclerViewAdapter extends RecyclerView.Adapter<MyArticleItemRecyclerViewAdapter.ViewHolder> {
+
+    private static final String TAG = "MyArticleItemRecyclerVi";
 
     private final List<ArticleContent.Article> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -35,7 +41,7 @@ public class MyArticleItemRecyclerViewAdapter extends RecyclerView.Adapter<MyArt
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).content);
-        holder.mImage.setImageResource(holder.mItem.getImageId());
+        holder.mImage.setImageResource(mValues.get(position).getImageId());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +62,6 @@ public class MyArticleItemRecyclerViewAdapter extends RecyclerView.Adapter<MyArt
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
-        public final TextView mTitle;
         public final ImageView mImage;
         public ArticleContent.Article mItem;
 
@@ -64,16 +69,16 @@ public class MyArticleItemRecyclerViewAdapter extends RecyclerView.Adapter<MyArt
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
-            mTitle = (TextView) view.findViewById(R.id.article_name);
             mImage = (ImageView) view.findViewById(R.id.article_image);
-//
-//            int screenWidth = group.getWidth()/2;
-//            ViewGroup.LayoutParams lp = mImage.getLayoutParams();
-//            lp.width = screenWidth;
-//            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//            mImage.setLayoutParams(lp);
-//            mImage.setMaxWidth(screenWidth);
-//            mImage.setMaxHeight(screenWidth * 2);
+            Resources resources = group.getResources();
+            //获取屏幕数据
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            //获取屏幕宽高，单位是像素
+            int widthPixels = displayMetrics.widthPixels/2;
+            ViewGroup.LayoutParams lp = mImage.getLayoutParams();
+            lp.width = widthPixels;
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mImage.setLayoutParams(lp);
         }
 
         @Override
