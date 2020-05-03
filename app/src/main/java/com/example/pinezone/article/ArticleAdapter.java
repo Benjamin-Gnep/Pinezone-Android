@@ -30,8 +30,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_article_item,parent,false);
         final ViewHolder holder = new ViewHolder(view,parent);
-
-
         return holder;
     }
 
@@ -46,6 +44,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public int getItemCount() {
         return articleList.size();
+    }
+
+    public void setMoreData(List<Article> articleList) {
+        for(Article article:articleList){
+            this.articleList.add(article);
+        }
+    }
+
+    public void refresh(List<Article> articleList) {
+        this.articleList.clear();
+        this.articleList = articleList;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -72,6 +81,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             ViewGroup.LayoutParams lp = articleImage.getLayoutParams();
             lp.width = widthPixels;
             lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if(lp.height > 2 * lp.width){
+                articleImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                lp.height = 2*lp.width;
+            }
             articleImage.setLayoutParams(lp);
         }
     }

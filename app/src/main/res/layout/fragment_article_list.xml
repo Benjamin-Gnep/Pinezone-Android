@@ -8,10 +8,28 @@
     tools:context=".article.ArticleListFragment"
     android:background="@color/white">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/article_recycler_view"
+
+        <include layout="@layout/pinezone_action_bar"
+            android:layout_marginTop="@dimen/line2"
+            android:layout_height="80dp"
+            android:layout_width="match_parent" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/line7"/>
+            app:srlPrimaryColor="@color/subColor"
+            android:layout_marginTop="80dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/article_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    android:paddingBottom="@dimen/line7"/>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

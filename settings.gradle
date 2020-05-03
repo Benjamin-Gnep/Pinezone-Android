@@ -1,2 +1,2 @@
-rootProject.name='Pinezone'
+rootProject.name='pinezone'
 include ':app'

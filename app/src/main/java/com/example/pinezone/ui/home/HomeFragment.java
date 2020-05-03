@@ -3,11 +3,13 @@ package com.example.pinezone.ui.home;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,15 +18,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.ArticleListFragment;
-import com.example.pinezone.ui.login.SplashActivity;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
+    private long exitTime = 0;
 
     private HomeViewModel homeViewModel;
 
@@ -40,6 +41,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if(keyCode == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    if((System.currentTimeMillis()-exitTime) > 2000){
+                        Toast.makeText(getContext(), "再一次返回退出程序", Toast.LENGTH_SHORT).show();
+                        exitTime = System.currentTimeMillis();
+                    } else {
+                        ActivityCollector.finishAll();
+                        System.exit(0);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,6 +121,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 ArticleListFragment articleListFragment = new ArticleListFragment();
                 transaction.replace(R.id.nav_host_fragment,articleListFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
                 break;
         }
