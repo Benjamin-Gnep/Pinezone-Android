@@ -2,11 +2,8 @@ package com.example.pinezone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.pinezone.article.ArticleListFragment;
 import com.example.pinezone.ui.home.HomeFragment;
 import com.example.pinezone.ui.mine.MineFragment;
 import com.example.pinezone.ui.notifications.NotificationsFragment;
@@ -16,10 +13,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends BasicActivity {
     private long exitTime = 0;
@@ -28,51 +21,46 @@ public class MainActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_star, R.id.navigation_notifications,
-                R.id.navigation_mine)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        final BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                switch (item.getItemId())
-                {
-                    case  R.id.navigation_home:
-                        HomeFragment homeFragment = new HomeFragment();
-                        transaction.replace(R.id.nav_host_fragment,homeFragment);
-                        transaction.commit();
-                        break;
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        switch (item.getItemId())
+                        {
+                            case  R.id.navigation_home:
+                                navView.getMenu().getItem(0).setChecked(true);
+                                HomeFragment homeFragment = new HomeFragment();
+                                transaction.replace(R.id.nav_host_fragment,homeFragment);
+                                transaction.commit();
+                                break;
 
-                    case R.id.navigation_star:
-                        StarFragment starFragment = new StarFragment();
-                        transaction.replace(R.id.nav_host_fragment,starFragment);
-                        transaction.commit();
-                        break;
+                            case R.id.navigation_star:
+                                navView.getMenu().getItem(1).setChecked(true);
+                                StarFragment starFragment = new StarFragment();
+                                transaction.replace(R.id.nav_host_fragment,starFragment);
+                                transaction.commit();
+                                break;
 
-                    case R.id.navigation_notifications:
-                        NotificationsFragment notificationsFragment = new NotificationsFragment();
-                        transaction.replace(R.id.nav_host_fragment,notificationsFragment);
-                        transaction.commit();
-                        break;
+                            case R.id.navigation_notifications:
+                                navView.getMenu().getItem(3).setChecked(true);
+                                NotificationsFragment notificationsFragment = new NotificationsFragment();
+                                transaction.replace(R.id.nav_host_fragment,notificationsFragment);
+                                transaction.commit();
+                                break;
 
-                    case R.id.navigation_mine:
-                        MineFragment mineFragment = new MineFragment();
-                        transaction.replace(R.id.nav_host_fragment,mineFragment);
-                        transaction.commit();
-                        break;
-                }
-                return false;
-            }
-        });
+                            case R.id.navigation_mine:
+                                MineFragment mineFragment = new MineFragment();
+                                navView.getMenu().getItem(4).setChecked(true);
+                                transaction.replace(R.id.nav_host_fragment,mineFragment);
+                                transaction.commit();
+                                break;
+                        }
+                        return false;
+                    }
+                });
         ActivityCollector.addActivity(this);
     }
 
@@ -92,6 +80,6 @@ public class MainActivity extends BasicActivity {
 //    }
 
     public SharedPreferences getSharedPreferences() {
-        return getSharedPreferences("config",MODE_PRIVATE);
+        return getSharedPreferences("setting",MODE_PRIVATE);
     }
 }

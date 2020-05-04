@@ -1,7 +1,5 @@
 package com.example.pinezone.ui.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -136,7 +134,7 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
 
         getCodeBtn.setOnClickListener(this);
         editCode.requestFocus();
-        pref = getSharedPreferences("config",MODE_PRIVATE);
+        pref = getSharedPreferences("setting",MODE_PRIVATE);
         editor = pref.edit();
         getCodeBtn.setClickable(false);
         //开始倒计时

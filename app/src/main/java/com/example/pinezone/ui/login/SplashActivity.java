@@ -1,13 +1,9 @@
 package com.example.pinezone.ui.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.view.WindowManager;
 
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
@@ -29,7 +25,7 @@ public class SplashActivity extends BasicActivity {
         handler.postDelayed(runnable = new Runnable() {
             @Override
             public void run() {
-                pref = getSharedPreferences("config",MODE_PRIVATE);
+                pref = getSharedPreferences("setting",MODE_PRIVATE);
                 String history = pref.getString("account","");
                 Intent intent;
                 if(history.equals("")){

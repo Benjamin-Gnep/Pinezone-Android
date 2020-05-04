@@ -18,6 +18,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
@@ -40,6 +43,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private TextView selectionText;
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
+
 
     @Override
     public void onResume() {
@@ -109,6 +113,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final MainActivity activity = (MainActivity) getActivity();
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         switch (v.getId()){
             case R.id.logout:
                 editor.clear();
@@ -120,8 +125,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 FragmentManager fragmentManager = activity.getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 ArticleListFragment articleListFragment = new ArticleListFragment();
-                transaction.replace(R.id.nav_host_fragment,articleListFragment);
                 transaction.addToBackStack(null);
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
                 transaction.commit();
                 break;
         }
