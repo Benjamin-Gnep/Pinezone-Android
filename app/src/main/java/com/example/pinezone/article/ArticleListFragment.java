@@ -1,7 +1,9 @@
 package com.example.pinezone.article;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -10,12 +12,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
@@ -30,12 +36,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ArticleListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ArticleListFragment extends Fragment {
+    private static final String TAG = "ArticleListFragment";
+    
     private static final String ARG_ARTICLE_TYPE = "articleType";
     private static final String ARG_PARAM2 = "param2";
 
@@ -102,7 +112,22 @@ public class ArticleListFragment extends Fragment {
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         articleRecyclerView.setLayoutManager(layoutManager);
-        final ArticleAdapter articleAdapter = new ArticleAdapter(getArticleList());
+        final ArticleAdapterPro articleAdapter = new ArticleAdapterPro(getContext(),getArticleList());
+        articleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
+                R.id.article_author_image,R.id.article_author_name,R.id.article_title);
+        articleAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(@NonNull BaseQuickAdapter adapter,
+                                         @NonNull View view, int position) {
+                switch (view.getId()){
+                    case R.id.article_image:
+                        Intent intent = new Intent(getActivity(),ArticleDetailActivity.class);
+                        getActivity().startActivity(intent);
+                        break;
+                }
+            }
+        });
+
         articleRecyclerView.setAdapter(articleAdapter);
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -120,7 +145,7 @@ public class ArticleListFragment extends Fragment {
             public void onLoadMore(int currentPage) {
                 if (currentPage > page) {
                     page++;
-                    articleAdapter.setMoreData(getArticleList());
+                    articleAdapter.addData(getArticleList());
                 }
             }
         });

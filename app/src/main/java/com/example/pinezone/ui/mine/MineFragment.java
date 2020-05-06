@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
-import com.example.pinezone.article.ArticleAdapter;
+import com.example.pinezone.article.ArticleAdapterPro;
 import com.example.pinezone.config.LoadMoreOnScrollListener;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -72,7 +72,7 @@ public class MineFragment extends Fragment {
                     }
                 };
         articleRecyclerView.setLayoutManager(layoutManager);
-        final ArticleAdapter mineArticleAdapter = new ArticleAdapter(getMineArticle());
+        final ArticleAdapterPro mineArticleAdapter = new ArticleAdapterPro(getContext(),getMineArticle());
         articleRecyclerView.setAdapter(mineArticleAdapter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -91,7 +91,7 @@ public class MineFragment extends Fragment {
                     View onlyChild = scrollView.getChildAt(0);
                     if (onlyChild.getHeight() <= scrollY + scrollView.getHeight()) {   // 如果满足就是到底部了
                         page++;
-                        mineArticleAdapter.setMoreData(getMineArticle());
+                        mineArticleAdapter.addData(getMineArticle());
                     }
                 }
             });

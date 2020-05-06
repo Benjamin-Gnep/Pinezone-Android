@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/act_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.login.SplashActivity"
+        <activity android:name=".article.ArticleDetailActivity"></activity>
+        <activity
+            android:name=".ui.login.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,13 +31,11 @@
         </activity>
         <activity android:name=".ui.login.LoginCode" />
         <activity android:name=".ui.login.LoginPhone" />
-        <activity android:name=".ui.login.LoginHome">
-
-        </activity>
+        <activity android:name=".ui.login.LoginHome"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
