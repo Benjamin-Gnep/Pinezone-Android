@@ -24,7 +24,6 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
         mContext = context;
     }
 
-
     @Override
     protected void convert(BaseViewHolder helper, Article article) {
         helper.setText(R.id.article_title,article.getTitle())

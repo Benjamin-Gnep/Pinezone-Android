@@ -19,13 +19,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.ArticleListFragment;
+import com.example.pinezone.config.ArticleConstant;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private long exitTime = 0;
@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private TextView selectionText;
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
+
 
 
     @Override
@@ -113,7 +114,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final MainActivity activity = (MainActivity) getActivity();
-        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+        assert activity != null;
+        ArticleListFragment articleListFragment;
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.logout:
                 editor.clear();
@@ -121,10 +125,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 ActivityCollector.finishAll();
                 break;
             case R.id.home_canteen:
-                assert activity != null;
-                FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                ArticleListFragment articleListFragment = new ArticleListFragment();
+                articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_CANTEEN);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
+                transaction.commit();
+                break;
+            case R.id.home_store:
+                articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_STORE);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
+                transaction.commit();
+                break;
+            case R.id.home_play:
+                articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_PLAY);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
+                transaction.commit();
+                break;
+            case R.id.home_study:
+                articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_STUDY);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.nav_host_fragment,articleListFragment);
+                transaction.commit();
+                break;
+            case R.id.home_gym:
+                articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_GYM);
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.nav_host_fragment,articleListFragment);
                 transaction.commit();

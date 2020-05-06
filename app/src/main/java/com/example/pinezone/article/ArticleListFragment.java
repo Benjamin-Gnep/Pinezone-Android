@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,6 +27,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.LoadMoreOnScrollListener;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
@@ -49,7 +52,7 @@ public class ArticleListFragment extends Fragment {
     private static final String ARG_ARTICLE_TYPE = "articleType";
     private static final String ARG_PARAM2 = "param2";
 
-    private String articleType;
+    private String articleType = null;
     private View view;
     private int page = 0;
 
@@ -69,7 +72,7 @@ public class ArticleListFragment extends Fragment {
     public static ArticleListFragment newInstance(String articleType) {
         ArticleListFragment fragment = new ArticleListFragment();
         Bundle args = new Bundle();
-        args.putString("ARG_ARTICLE_TYPE",articleType);
+        args.putString(ARG_ARTICLE_TYPE,articleType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,12 +105,29 @@ public class ArticleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_article_list, container, false);
+        ConstraintLayout actionBarView = view.findViewById(R.id.action_bar);
+        TextView textView = (TextView) actionBarView.findViewById(R.id.action_bar_title);
+        switch (articleType){
+            case ArticleConstant.TYPE_CANTEEN:
+                textView.setText("食堂");break;
+            case ArticleConstant.TYPE_STORE:
+                textView.setText("探店");break;
+            case ArticleConstant.TYPE_PLAY:
+                textView.setText("玩吧");break;
+            case ArticleConstant.TYPE_STUDY:
+                textView.setText("自习室");break;
+            case ArticleConstant.TYPE_GYM:
+                textView.setText("健身房");break;
+        }
+
         RefreshLayout refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         refreshLayout.setDragRate((float) 0.6);
         refreshLayout.setHeaderMaxDragRate((float) 1.6);
         refreshLayout.autoRefreshAnimationOnly();
         refreshLayout.finishRefresh(2000);
+
         final RecyclerView articleRecyclerView = view.findViewById(R.id.article_recycler_view);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
