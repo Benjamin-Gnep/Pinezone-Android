@@ -62,11 +62,8 @@ public class MineFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_mine, container, false);
-        initView(root);
-
+    public void onResume() {
+        super.onResume();
         final StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL){
                     @Override
@@ -99,6 +96,13 @@ public class MineFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_mine, container, false);
+        initView(root);
         return root;
     }
 

@@ -39,7 +39,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageButton
+                    android:id="@+id/mine_setting"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_setting"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="@dimen/line5"
+                    android:layout_marginRight="@dimen/line2"/>
 
+                <ImageButton
+                    android:id="@+id/mine_QR"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_qrcode"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/mine_setting"
+                    android:layout_marginTop="@dimen/line5"
+                    android:layout_marginRight="@dimen/line2"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -233,7 +253,8 @@
         android:text="阿苯不加奶盖"
         android:textColor="@color/colorPrimary"
         android:paddingTop="@dimen/line3"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="invisible"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
