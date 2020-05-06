@@ -5,24 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/line3">
 
-    <Button
-        android:id="@+id/back_button"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="@dimen/line2"
-        android:background="@drawable/ic_back"
-        />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="@dimen/line3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="@dimen/line3"
-        app:layout_constraintLeft_toRightOf="@id/back_button"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:text="test"
         android:gravity="center_vertical"
         android:textSize="@dimen/H2"

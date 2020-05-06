@@ -7,17 +7,27 @@
     tools:context=".ui.star.StarFragment"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/text_star"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        <include layout="@layout/pinezone_nobutton_action_bar"
+            android:layout_marginTop="@dimen/line2"
+            android:layout_height="80dp"
+            android:layout_width="match_parent" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/star_refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srlPrimaryColor="@color/subColor"
+            android:layout_marginTop="80dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/star_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:paddingBottom="@dimen/line7"/>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

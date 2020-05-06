@@ -96,16 +96,14 @@ public class ArticleListFragment extends Fragment {
         RefreshLayout refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         refreshLayout.setDragRate((float) 0.6);
         refreshLayout.setHeaderMaxDragRate((float) 1.6);
-        refreshLayout.autoRefreshAnimationOnly();//自动刷新，只显示动画不执行刷新
-        refreshLayout.finishRefresh(1200);//延迟2000毫秒后结束刷新
-
+        refreshLayout.autoRefreshAnimationOnly();
+        refreshLayout.finishRefresh(2000);
         final RecyclerView articleRecyclerView = view.findViewById(R.id.article_recycler_view);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         articleRecyclerView.setLayoutManager(layoutManager);
         final ArticleAdapter articleAdapter = new ArticleAdapter(getArticleList());
         articleRecyclerView.setAdapter(articleAdapter);
-
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

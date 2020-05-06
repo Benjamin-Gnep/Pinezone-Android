@@ -12,16 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.pinezone.R;
 
 import java.util.List;
 
-public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
+public class ArticleAdapter extends BaseQuickAdapter<Article, ArticleAdapter.ViewHolder> {
 
     private List<Article> articleList;
 
     public ArticleAdapter(List<Article> articles){
-            articleList = articles;
+        super(R.layout.fragment_article_list,articles);
+        articleList = articles;
     }
 
     @NonNull
@@ -33,31 +36,39 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return holder;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Article article = articleList.get(position);
-        holder.articleTitle.setText(article.getTitle());
-        holder.articleImage.setImageResource(article.getImage());
-        holder.authorImage.setImageResource(R.drawable.user);
-    }
+//    @Override
+//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        Article article = articleList.get(position);
+//        holder.articleTitle.setText(article.getTitle());
+//        holder.articleImage.setImageResource(article.getImage());
+//        holder.authorImage.setImageResource(R.drawable.user);
+//    }
 
     @Override
     public int getItemCount() {
         return articleList.size();
     }
 
-    public void setMoreData(List<Article> articleList) {
-        for(Article article:articleList){
-            this.articleList.add(article);
-        }
-    }
-
-    public void refresh(List<Article> articleList) {
+    public  void refresh(List<Article> articleList) {
         this.articleList.clear();
-        this.articleList = articleList;
+        this.articleList.addAll(articleList);
+        notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    protected void convert(ViewHolder viewHolder, Article article) {
+//        Article article = articleList.get(position);
+        viewHolder.articleTitle.setText(article.getTitle());
+        viewHolder.articleImage.setImageResource(article.getImage());
+        viewHolder.authorImage.setImageResource(R.drawable.user);
+    }
+
+    public void setMoreData(List<Article> articleList) {
+        this.articleList.addAll(articleList);
+        notifyDataSetChanged();
+    }
+
+    class ViewHolder extends BaseViewHolder{
         ImageView articleImage;
         TextView articleTitle;
         ImageView authorImage;
