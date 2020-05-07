@@ -5,8 +5,8 @@
     <dimen name="H1">22sp</dimen>
     <dimen name="H2">18sp</dimen>
     <dimen name="H3">16sp</dimen>
-    <dimen name="H4">14sp</dimen>
-    <dimen name="H5">13sp</dimen>
+    <dimen name="H4">15sp</dimen>
+    <dimen name="H5">14sp</dimen>
     <dimen name="little">12sp</dimen>
     <dimen name="annotation">11sp</dimen>
 

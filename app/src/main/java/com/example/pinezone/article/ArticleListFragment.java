@@ -141,6 +141,7 @@ public class ArticleListFragment extends Fragment {
                                          @NonNull View view, int position) {
                 switch (view.getId()){
                     case R.id.article_image:
+                    case R.id.article_title:
                         Intent intent = new Intent(getActivity(),ArticleDetailActivity.class);
                         getActivity().startActivity(intent);
                         break;

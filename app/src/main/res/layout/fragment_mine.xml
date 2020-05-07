@@ -23,7 +23,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srlPrimaryColor="@color/middleGray"
-        app:srlDragRate="0.3"
+        app:srlDragRate="0.4"
         app:srlHeaderMaxDragRate="2"
         app:srlHeaderHeight="80dp"
         >

@@ -4,9 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.pinezone.BasicActivity;
 import com.example.pinezone.R;
 
-public class ArticleDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
