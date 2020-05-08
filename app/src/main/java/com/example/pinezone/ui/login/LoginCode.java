@@ -233,7 +233,7 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
 
         final UserService userService = retrofit.create(UserService.class);
 
-        Call<ResponseBody> call = userService.loginByPhone(15059074916L);
+        Call<ResponseBody> call = userService.loginByPhone(Long.parseLong(phoneNum));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

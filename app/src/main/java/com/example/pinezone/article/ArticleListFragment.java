@@ -156,7 +156,7 @@ public class ArticleListFragment extends Fragment {
         articleRecyclerView.setHasFixedSize(true);
 
         articleRecyclerView.setLayoutManager(layoutManager);
-        final ArticleAdapterPro articleAdapter = new ArticleAdapterPro(getContext(),getArticleList());
+        final ArticleAdapterPro articleAdapter = new ArticleAdapterPro(getContext(),getArticleList(page));
         articleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
                 R.id.article_author_image,R.id.article_author_name,R.id.article_title);
         articleAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
@@ -178,7 +178,7 @@ public class ArticleListFragment extends Fragment {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.finishRefresh(1000/*,false*/);//传入false表示刷新失败
-                articleAdapter.refresh(getArticleList());
+                articleAdapter.refresh(getArticleList(0));
                 page = 0;
             }
         });
@@ -190,7 +190,7 @@ public class ArticleListFragment extends Fragment {
                 if (currentPage > page) {
                     page++;
                     int preDataNum = articleAdapter.articleList.size();
-                    List<Article> articles = getArticleList();
+                    List<Article> articles = getArticleList(page);
                     articleAdapter.articleList.addAll(articles);
                     articleAdapter.notifyItemRangeInserted(preDataNum,articles.size());
                 }
@@ -199,7 +199,7 @@ public class ArticleListFragment extends Fragment {
         return view;
     }
 
-    public List<Article> getArticleList(){
+    public List<Article> getArticleList(int page){
         List<Article> articleList = new ArrayList<>();
         for(int i = 0;i < 3; i++){
             Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);

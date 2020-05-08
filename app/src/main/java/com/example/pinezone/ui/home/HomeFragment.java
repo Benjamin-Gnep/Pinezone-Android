@@ -1,5 +1,6 @@
 package com.example.pinezone.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -99,9 +100,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        final MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
-        pref = activity.getSharedPreferences();
+        pref = getContext().getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = pref.edit();
         logoutButton.setOnClickListener(this);
         canteenButton.setOnClickListener(this);
