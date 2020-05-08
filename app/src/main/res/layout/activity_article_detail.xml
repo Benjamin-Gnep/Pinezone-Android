@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".article.ArticleDetailActivity">
+    tools:context=".article.ArticleDetailActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/article_tab_bar"
@@ -61,16 +62,18 @@
             tools:targetApi="lollipop"/>
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/article_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/line7"
+        android:layout_height="80dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="@dimen/line3"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:elevation="@dimen/line1"
+        android:gravity="center_vertical"
+        android:outlineSpotShadowColor="@color/white"
+        android:background="@color/white"
+        tools:targetApi="p">
         <Button
             android:id="@+id/back_button"
             android:layout_width="16dp"
@@ -78,6 +81,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="@dimen/line3"
             android:layout_marginLeft="@dimen/line2"
             android:background="@drawable/ic_back"
             />
@@ -85,10 +89,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="240dp"
             android:layout_height="@dimen/line5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/back_button"
+            android:layout_marginTop="@dimen/line3"
             android:layout_marginLeft="@dimen/line2">
 
             <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/detail_user_image"
+                android:id="@+id/detail_author_image"
                 android:layout_width="@dimen/line4"
                 android:layout_height="@dimen/line4"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -98,24 +106,24 @@
                 android:src="@drawable/user"/>
 
             <TextView
-                android:id="@+id/detail_user_name"
+                android:id="@+id/detail_author_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/detail_user_describe"
-                app:layout_constraintLeft_toRightOf="@id/detail_user_image"
+                app:layout_constraintBottom_toTopOf="@id/detail_author_describe"
+                app:layout_constraintLeft_toRightOf="@id/detail_author_image"
                 android:layout_marginLeft="@dimen/line2"
-                android:textSize="@dimen/little"
+                android:textSize="@dimen/H5"
                 android:textColor="@color/colorPrimaryDark"
                 android:text="阿苯不加奶盖"
                 />
 
             <TextView
-                android:id="@+id/detail_user_describe"
+                android:id="@+id/detail_author_describe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/detail_user_name"
-                app:layout_constraintLeft_toRightOf="@id/detail_user_image"
+                app:layout_constraintTop_toBottomOf="@id/detail_author_name"
+                app:layout_constraintLeft_toRightOf="@id/detail_author_image"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginLeft="@dimen/line2"
                 android:textSize="@dimen/annotation"
@@ -128,13 +136,17 @@
             android:id="@+id/detail_subscribe"
             android:layout_width="64dp"
             android:layout_height="24dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/line3"
             android:text="关注"
-            android:layout_marginLeft="@dimen/line1"
+            android:layout_marginRight="@dimen/line2"
             android:textColor="@color/subColor"
             android:background="@drawable/button_line_shape_light"
             android:stateListAnimator="@null"
             />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -158,22 +170,41 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+<!--                <com.example.pinezone.article.BannerPagerView-->
+<!--                    android:id="@+id/detail_image_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="520dp"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                    app:layout_constraintRight_toRightOf="parent"-->
+<!--                    android:layout_marginTop="80dp"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    />-->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/detail_image"
+                    android:id="@+id/detail_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="520dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="88dp"
+                    android:layout_marginTop="80dp"
+                    android:orientation="horizontal"
                     />
+<!--                <com.example.pinezone.article.WormIndicatorView-->
+<!--                    android:id="@+id/detail_indicator"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                    app:layout_constraintRight_toRightOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@id/detail_image_view"-->
+<!--                    android:layout_marginBottom="@dimen/line2"/>-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/detail_image"
+                    app:layout_constraintTop_toBottomOf="@id/detail_image_view"
                     android:layout_marginTop="@dimen/line2">
 
                     <TextView

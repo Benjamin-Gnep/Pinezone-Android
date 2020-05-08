@@ -10,22 +10,39 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.config.UserService;
+import com.example.pinezone.user.User;
+import com.google.gson.Gson;
 import com.mob.MobSDK;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.IOException;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginCode extends BasicActivity implements View.OnClickListener {
+    private static final String TAG = "LoginCode";
+
     EditText editCode;
     Button getCodeBtn;
     String codeNum;
@@ -102,6 +119,7 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
                         startActivity(new Intent(LoginCode.this, MainActivity.class));
                         editor.putString("account",phoneNum);//把账号持久化储存
                         editor.apply();
+                        initUserInfo(phoneNum);
                         LoginActivityCollector.finishAll();
                     }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//获取验证码成功
                         Toast.makeText(getApplicationContext(), "验证码已经发送",
@@ -205,5 +223,68 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    //存储用户信息
+    void initUserInfo(String phoneNum){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .build();
+
+        final UserService userService = retrofit.create(UserService.class);
+
+        Call<ResponseBody> call = userService.loginByPhone(15059074916L);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String s = response.body().string();
+                    Gson gson = new Gson();
+
+                    User user = gson.fromJson(s,User.class);
+                    pref = getSharedPreferences("setting",MODE_PRIVATE);
+                    editor = pref.edit();
+
+                    editor.putInt("id",user.getId());
+                    editor.putString("name",user.getName());
+                    editor.putInt("sex",user.getSex());
+                    editor.putString("profile",user.getProfile());
+                    editor.putInt("grade",user.getLevel());
+                    editor.apply();
+                    editor.apply();
+                    user.userShow();
+
+                    Call<ResponseBody> callImg = userService.getUserImage(user.getId());;
+                    callImg.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            try {
+                                assert response.body() != null;
+                                String s = response.body().string();
+                                JSONObject image = new JSONObject(s);
+                                String path = image.getString("path");
+                                editor.putString("path",path);
+                                Log.e(TAG, path);
+                                editor.apply();
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure: "+t.toString() );
+            }
+        });
     }
 }

@@ -9,10 +9,7 @@ import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 
-import java.util.Timer;
-
 public class SplashActivity extends BasicActivity {
-    Timer timer = new Timer();
     private SharedPreferences pref;
 
     @Override
@@ -21,8 +18,10 @@ public class SplashActivity extends BasicActivity {
         setBarHide();
         setContentView(R.layout.activity_splash);
         Handler handler = new Handler();
-        Runnable runnable;
-        handler.postDelayed(runnable = new Runnable() {
+
+
+
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 pref = getSharedPreferences("setting",MODE_PRIVATE);

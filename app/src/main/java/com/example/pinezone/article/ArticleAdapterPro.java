@@ -16,7 +16,7 @@ import java.util.List;
 public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder> {
 
     private Context mContext;
-    private List<Article> articleList;
+    public List<Article> articleList;
 
     public ArticleAdapterPro(Context context, List<Article> data) {
         super(R.layout.fragment_article_item, data);

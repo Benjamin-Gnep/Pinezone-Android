@@ -1,7 +1,6 @@
 package com.example.pinezone.ui.mine;
 
 import androidx.core.widget.NestedScrollView;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,26 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleAdapterPro;
-import com.example.pinezone.config.LoadMoreOnScrollListener;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MineFragment extends Fragment {
     private static final String TAG = "MineFragment";
@@ -92,6 +85,7 @@ public class MineFragment extends Fragment {
                     if (onlyChild.getHeight() <= scrollY + scrollView.getHeight()) {   // 如果满足就是到底部了
                         page++;
                         mineArticleAdapter.addData(getMineArticle());
+                        articleRecyclerView.requestLayout();
                     }
                 }
             });
@@ -155,15 +149,18 @@ public class MineFragment extends Fragment {
                 userSign.setText(s);
             }
         });
-        mineViewModel.getUserImage().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        mineViewModel.getUserImage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(Integer integer) {
-                userImage.setImageResource(integer);
+            public void onChanged(@Nullable final String s) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Glide.with(Objects.requireNonNull(getContext())).load(s).into(userImage);
+                }
             }
         });
         mineViewModel.getUserSex().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+                assert s != null;
                 if(s.equals("男")){
                     userGradeSex.setSelected(true);
                 }
@@ -204,5 +201,4 @@ public class MineFragment extends Fragment {
             }
         });
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.pinezone.article;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,9 +9,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
@@ -28,18 +31,32 @@ import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.config.ArticleConstant;
+import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.LoadMoreOnScrollListener;
+import com.example.pinezone.user.User;
+import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -129,8 +146,15 @@ public class ArticleListFragment extends Fragment {
         refreshLayout.finishRefresh(2000);
 
         final RecyclerView articleRecyclerView = view.findViewById(R.id.article_recycler_view);
-        StaggeredGridLayoutManager layoutManager =
+        final StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        //解决瀑布流错乱，顶部留白
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        ((DefaultItemAnimator) articleRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) articleRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        articleRecyclerView.getItemAnimator().setChangeDuration(0);
+        articleRecyclerView.setHasFixedSize(true);
+
         articleRecyclerView.setLayoutManager(layoutManager);
         final ArticleAdapterPro articleAdapter = new ArticleAdapterPro(getContext(),getArticleList());
         articleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
@@ -142,8 +166,7 @@ public class ArticleListFragment extends Fragment {
                 switch (view.getId()){
                     case R.id.article_image:
                     case R.id.article_title:
-                        Intent intent = new Intent(getActivity(),ArticleDetailActivity.class);
-                        getActivity().startActivity(intent);
+                        ArticleDetailActivity.StartActivity(getActivity(),111);
                         break;
                 }
             }
@@ -166,7 +189,10 @@ public class ArticleListFragment extends Fragment {
             public void onLoadMore(int currentPage) {
                 if (currentPage > page) {
                     page++;
-                    articleAdapter.addData(getArticleList());
+                    int preDataNum = articleAdapter.articleList.size();
+                    List<Article> articles = getArticleList();
+                    articleAdapter.articleList.addAll(articles);
+                    articleAdapter.notifyItemRangeInserted(preDataNum,articles.size());
                 }
             }
         });
@@ -187,6 +213,21 @@ public class ArticleListFragment extends Fragment {
             Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
             articleList.add(jiaozi);
         }
+
+//        switch (articleType){
+//            case ArticleConstant.TYPE_CANTEEN:
+//                call = articleService.getArticleList(1);break;
+//            case ArticleConstant.TYPE_STORE:
+//                call = articleService.getArticleList(2);break;
+//            case ArticleConstant.TYPE_PLAY:
+//                call = articleService.getArticleList(3);break;
+//            case ArticleConstant.TYPE_STUDY:
+//                call = articleService.getArticleList(4);break;
+//            case ArticleConstant.TYPE_GYM:
+//                call = articleService.getArticleList(5);break;
+//        }
+
+
         return articleList;
     }
 
