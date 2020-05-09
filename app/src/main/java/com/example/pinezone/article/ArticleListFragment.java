@@ -1,16 +1,11 @@
 package com.example.pinezone.article;
 
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -26,32 +21,16 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.example.pinezone.ActivityCollector;
-import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.ArticleService;
-import com.example.pinezone.config.LoadMoreOnScrollListener;
-import com.example.pinezone.user.User;
-import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
-import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
-import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,9 +48,14 @@ public class ArticleListFragment extends Fragment {
     private static final String ARG_ARTICLE_TYPE = "articleType";
     private static final String ARG_PARAM2 = "param2";
 
+    private RecyclerView articleRecyclerView;
+    private RefreshLayout refreshLayout;
+    private ArticleAdapterPro articleAdapter;
+
     private String articleType = null;
     private View view;
-    private int page = 0;
+    private static int requestPage = 1;
+    private static int currentPage = 1;
 
     public ArticleListFragment() {
         // 需要空的构造函数
@@ -120,7 +104,7 @@ public class ArticleListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_article_list, container, false);
@@ -139,13 +123,13 @@ public class ArticleListFragment extends Fragment {
                 textView.setText("健身房");break;
         }
 
-        RefreshLayout refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
+        refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         refreshLayout.setDragRate((float) 0.6);
         refreshLayout.setHeaderMaxDragRate((float) 1.6);
         refreshLayout.autoRefreshAnimationOnly();
         refreshLayout.finishRefresh(2000);
-
-        final RecyclerView articleRecyclerView = view.findViewById(R.id.article_recycler_view);
+        refreshLayout.setEnableAutoLoadMore(true);
+        articleRecyclerView = view.findViewById(R.id.article_recycler_view);
         final StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         //解决瀑布流错乱，顶部留白
@@ -156,7 +140,7 @@ public class ArticleListFragment extends Fragment {
         articleRecyclerView.setHasFixedSize(true);
 
         articleRecyclerView.setLayoutManager(layoutManager);
-        final ArticleAdapterPro articleAdapter = new ArticleAdapterPro(getContext(),getArticleList(page));
+        articleAdapter = new ArticleAdapterPro(getContext(),new ArrayList<Article>());
         articleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
                 R.id.article_author_image,R.id.article_author_name,R.id.article_title);
         articleAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
@@ -172,64 +156,111 @@ public class ArticleListFragment extends Fragment {
             }
         });
 
+        articleRecyclerView.requestLayout();
         articleRecyclerView.setAdapter(articleAdapter);
+        articleRecyclerView.setItemAnimator(null);
+
+        currentPage = 1;
+        requestPage = 1;
+        getArticleList(requestPage);
+        articleAdapter.notifyDataSetChanged();
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.finishRefresh(1000/*,false*/);//传入false表示刷新失败
-                articleAdapter.refresh(getArticleList(0));
-                page = 0;
+                requestPage = 1;
+                currentPage = 1;
+                getArticleList(requestPage);
             }
         });
 
-
-        articleRecyclerView.addOnScrollListener(new LoadMoreOnScrollListener(layoutManager) {
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onLoadMore(int currentPage) {
-                if (currentPage > page) {
-                    page++;
-                    int preDataNum = articleAdapter.articleList.size();
-                    List<Article> articles = getArticleList(page);
-                    articleAdapter.articleList.addAll(articles);
-                    articleAdapter.notifyItemRangeInserted(preDataNum,articles.size());
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore(1000);
+                if(requestPage == currentPage){
+                    requestPage++;
+                    getArticleList(requestPage);
+                    currentPage++;
                 }
             }
         });
+
+        //解决顶部留白问题，必写
+        articleRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                int[] first = new int[2];
+                layoutManager.findFirstCompletelyVisibleItemPositions(first);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && (first[0] == 1 || first[1] == 1)) {
+                    layoutManager.invalidateSpanAssignments();
+                }
+            }
+        });
+
         return view;
     }
 
-    public List<Article> getArticleList(int page){
-        List<Article> articleList = new ArrayList<>();
-        for(int i = 0;i < 3; i++){
-            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
-            articleList.add(coffee);
-            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
-            articleList.add(milktea);
-            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
-            articleList.add(soup);
-            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
-            articleList.add(noodle);
-            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
-            articleList.add(jiaozi);
-        }
-
-//        switch (articleType){
-//            case ArticleConstant.TYPE_CANTEEN:
-//                call = articleService.getArticleList(1);break;
-//            case ArticleConstant.TYPE_STORE:
-//                call = articleService.getArticleList(2);break;
-//            case ArticleConstant.TYPE_PLAY:
-//                call = articleService.getArticleList(3);break;
-//            case ArticleConstant.TYPE_STUDY:
-//                call = articleService.getArticleList(4);break;
-//            case ArticleConstant.TYPE_GYM:
-//                call = articleService.getArticleList(5);break;
+    private void getArticleList(final int page){
+        final List<Article> articleList = new ArrayList<>();
+//        for(int i = 0;i < 3; i++){
+//            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
+//            articleList.add(coffee);
+//            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
+//            articleList.add(milktea);
+//            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
+//            articleList.add(soup);
+//            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
+//            articleList.add(noodle);
+//            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
+//            articleList.add(jiaozi);
 //        }
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
 
-        return articleList;
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+
+        Call<List<Article>> call;
+
+        switch (articleType){
+            case ArticleConstant.TYPE_CANTEEN:
+                call = articleService.getArticleList(1,page,10);break;
+            case ArticleConstant.TYPE_STORE:
+                call = articleService.getArticleList(2,page,10);break;
+            case ArticleConstant.TYPE_PLAY:
+                call = articleService.getArticleList(3,page,10);break;
+            case ArticleConstant.TYPE_STUDY:
+                call = articleService.getArticleList(4,page,10);break;
+            case ArticleConstant.TYPE_GYM:
+                call = articleService.getArticleList(5,page,10);break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + articleType);
+        }
+        
+        call.enqueue(new Callback<List<Article>>() {
+            @Override
+            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                assert response.body() != null;
+                if(response.body().size() != 0){
+                    Log.e(TAG, response.body().toString() );
+                    articleList.addAll(response.body());
+                    if(page == 1){
+                        articleAdapter.refresh(articleList);
+                    }else{
+                        articleAdapter.loadMore(articleList);
+                    }
+                } else {
+                    Toast.makeText(getContext(),"没有更多了",Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Article>> call, Throwable t) {
+                Log.e(TAG, "onFailure: "+t.toString() );
+            }
+        });
     }
-
-
 }

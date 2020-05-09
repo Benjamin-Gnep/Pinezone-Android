@@ -102,18 +102,18 @@ public class MineFragment extends Fragment {
 
     private List<Article> getMineArticle() {
         List<Article> articles = new ArrayList<>();
-        for(int i = 0; i < 5; i++){
-            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
-            articles.add(coffee);
-            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
-            articles.add(milktea);
-            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
-            articles.add(soup);
-            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
-            articles.add(noodle);
-            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
-            articles.add(jiaozi);
-        }
+//        for(int i = 0; i < 5; i++){
+//            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
+//            articles.add(coffee);
+//            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
+//            articles.add(milktea);
+//            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
+//            articles.add(soup);
+//            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
+//            articles.add(noodle);
+//            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
+//            articles.add(jiaozi);
+//        }
         return articles;
     }
 

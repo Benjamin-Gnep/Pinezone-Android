@@ -14,6 +14,7 @@
         android:adjustViewBounds="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/lightGray"
         app:riv_corner_radius="5dip"/>
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/line1"
         android:layout_marginLeft="@dimen/line1"
+        android:paddingRight="@dimen/line2"
         android:textSize="@dimen/H5"
         android:textColor="@color/black"
         android:maxLines="2"
@@ -57,11 +59,25 @@
         app:layout_constraintTop_toBottomOf="@id/article_title"
         />
 
+    <TextView
+        android:id="@+id/like_num"
+        android:layout_width="40dp"
+        android:layout_height="33dp"
+        android:text="144"
+        android:gravity="right"
+        android:paddingVertical="@dimen/line1"
+        android:textSize="@dimen/annotation"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="@dimen/line4"
+        android:background="@null"
+        />
+
     <Button
         android:id="@+id/like_button"
         android:layout_width="40dp"
         android:layout_height="@dimen/line4"
-        android:text="144"
         android:gravity="center_vertical"
         android:textSize="@dimen/annotation"
         android:textColor="@color/colorPrimaryLight"
@@ -71,5 +87,7 @@
         android:paddingBottom="@dimen/line1"
         android:background="@null"
         android:drawableRight="@drawable/ic_like" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
