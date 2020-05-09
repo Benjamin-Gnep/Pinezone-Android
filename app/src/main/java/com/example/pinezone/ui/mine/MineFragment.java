@@ -14,25 +14,37 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleAdapterPro;
+import com.example.pinezone.config.ArticleService;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MineFragment extends Fragment {
     private static final String TAG = "MineFragment";
 
-    private int page = 0;
+    private int page = 1;
 
     private MineViewModel mineViewModel;
     private TextView userName;
@@ -45,9 +57,11 @@ public class MineFragment extends Fragment {
     private TextView userArticle;
 
     private NestedScrollView scrollView;
+    private RefreshLayout refreshLayout;
     private RecyclerView articleRecyclerView;
 
     private TextView mineActionBar;
+    private ArticleAdapterPro mineArticleAdapter;
 
     public static MineFragment newInstance() {
         return new MineFragment();
@@ -65,7 +79,21 @@ public class MineFragment extends Fragment {
                     }
                 };
         articleRecyclerView.setLayoutManager(layoutManager);
-        final ArticleAdapterPro mineArticleAdapter = new ArticleAdapterPro(getContext(),getMineArticle());
+        mineArticleAdapter = new ArticleAdapterPro(getContext(),new ArrayList<Article>());
+
+        page = 1;
+        getMineArticle(page);
+        mineArticleAdapter.notifyDataSetChanged();
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refreshlayout.finishRefresh(1000/*,false*/);//传入false表示刷新失败
+                page = 1;
+                getMineArticle(page);
+            }
+        });
+
         articleRecyclerView.setAdapter(mineArticleAdapter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -84,8 +112,7 @@ public class MineFragment extends Fragment {
                     View onlyChild = scrollView.getChildAt(0);
                     if (onlyChild.getHeight() <= scrollY + scrollView.getHeight()) {   // 如果满足就是到底部了
                         page++;
-                        mineArticleAdapter.addData(getMineArticle());
-                        articleRecyclerView.requestLayout();
+                        getMineArticle(page);
                     }
                 }
             });
@@ -100,26 +127,51 @@ public class MineFragment extends Fragment {
         return root;
     }
 
-    private List<Article> getMineArticle() {
-        List<Article> articles = new ArrayList<>();
-//        for(int i = 0; i < 5; i++){
-//            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
-//            articles.add(coffee);
-//            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
-//            articles.add(milktea);
-//            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
-//            articles.add(soup);
-//            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
-//            articles.add(noodle);
-//            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
-//            articles.add(jiaozi);
-//        }
-        return articles;
+    private void getMineArticle(final int page) {
+        final List<Article> articleList = new ArrayList<>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+
+        int uid = mineViewModel.getUserId().getValue();
+        Call<List<Article>> call = articleService.getUserArticleList(uid, page,10);
+
+
+        call.enqueue(new Callback<List<Article>>() {
+            @Override
+            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
+                assert response.body() != null;
+                if(response.body().size() != 0){
+                    Log.e(TAG, response.body().toString() );
+                    articleList.addAll(response.body());
+                    if(page == 1){
+                        mineArticleAdapter.refresh(articleList);
+                    }else{
+                        mineArticleAdapter.loadMore(articleList);
+                    }
+                } else {
+                    try{
+                        Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Article>> call, Throwable t) {
+                Log.e(TAG, "onFailure: "+t.toString() );
+            }
+        });
     }
 
     private void initView(View root) {
         mineViewModel = new ViewModelProvider(this).get(MineViewModel.class);
         scrollView = root.findViewById(R.id.mine_scroll);
+        refreshLayout = root.findViewById(R.id.mine_refresh);
         mineActionBar = root.findViewById(R.id.mine_action_bar);
         mineActionBar.setVisibility(View.INVISIBLE);
         articleRecyclerView = root.findViewById(R.id.mine_article_list);

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.ArticleService;
@@ -254,7 +255,12 @@ public class ArticleListFragment extends Fragment {
                         articleAdapter.loadMore(articleList);
                     }
                 } else {
-                    Toast.makeText(getContext(),"没有更多了",Toast.LENGTH_SHORT).show();
+                    try{
+                        Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
             @Override

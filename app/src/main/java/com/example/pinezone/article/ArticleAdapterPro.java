@@ -2,12 +2,19 @@ package com.example.pinezone.article;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.pinezone.R;
@@ -33,10 +40,31 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
                 .setText(R.id.like_num,String.valueOf(article.getLikenum()));
         ImageView userImage = helper.findView(R.id.article_author_image);
         ImageView articleImage = helper.findView(R.id.article_image);
-        assert articleImage != null;
-        //Log.e("ArticleAdapterPro", String.valueOf(article.getAimg().get(0).path));
-        Glide.with((getContext())).load(article.getAimg().get(0).path).into(articleImage);
+//        userImage.setImageResource(R.drawable.default_background);
+//        articleImage.setImageResource(R.drawable.default_background);
+//        Log.e("ArticleAdapterPro", String.valueOf(article.getAimg().get(0).path));
+        Glide.with((getContext())).load(article.getAimg().get(0).path)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                Target<Drawable> target, boolean isFirstResource) {
+                        Log.d("Wain","加载失败 errorMsg:"+(e!=null?e.getMessage():"null"));
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(final Drawable resource, Object model,
+                                                   Target<Drawable> target, DataSource dataSource,
+                                                   boolean isFirstResource) {
+                        Log.d("Wain","成功  Drawable Name:"+resource.getClass().getCanonicalName());
+                        return false;
+                    }
+                })
+                .error(R.drawable.default_background)
+                .into(articleImage);
         Glide.with((getContext())).load(article.getUimg()).into(userImage);
+
+
         Resources resources = mContext.getResources();
         //获取屏幕数据
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
@@ -52,7 +80,7 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
         articleImage.setLayoutParams(lp);
     }
 
-    void refresh(List<Article> list) {
+    public void refresh(List<Article> list) {
         articleList.clear();
         notifyDataSetChanged();
         int currentSize = articleList.size();
@@ -61,7 +89,7 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
         notifyItemRangeInserted(currentSize,insertSize);
     }
 
-    void loadMore(List<Article> list) {
+    public void loadMore(List<Article> list) {
         int currentSize = articleList.size();
         int insertSize = list.size();
         articleList.addAll(list);

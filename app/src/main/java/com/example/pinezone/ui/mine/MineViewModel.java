@@ -10,9 +10,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
-import androidx.lifecycle.ViewModel;
 
-import com.example.pinezone.MainActivity;
 import com.example.pinezone.config.UserService;
 import com.example.pinezone.user.User;
 import com.google.gson.Gson;
@@ -29,7 +27,7 @@ public class MineViewModel extends AndroidViewModel {
     private static final String TAG = "MineViewModel";
 
     private SharedPreferences pref;
-
+    private MutableLiveData<Integer> userId;
     private MutableLiveData<String> userName;
     private MutableLiveData<String> userSign;
     private MutableLiveData<String> userImage;
@@ -42,6 +40,7 @@ public class MineViewModel extends AndroidViewModel {
 
     public MineViewModel(@NonNull Application application, SavedStateHandle handle) {
         super(application);
+        userId = new MutableLiveData<>();
         userName = new MutableLiveData<>();
         userSign = new MutableLiveData<>();
         userImage = new MutableLiveData<>();
@@ -68,6 +67,7 @@ public class MineViewModel extends AndroidViewModel {
 //        userArticle.setValue("34");
 //        userImage.setValue(R.drawable.user);
 
+        userId.setValue(pref.getInt("id",0));
         userName.setValue(pref.getString("name",""));
         userSign.setValue(pref.getString("profile",""));
         if(pref.getInt("sex",1) == 1){
@@ -117,7 +117,9 @@ public class MineViewModel extends AndroidViewModel {
         return userSex;
     }
 
-
+    MutableLiveData<Integer> getUserId() {
+        return userId;
+    }
 
     void refresh(){
         Retrofit retrofit = new Retrofit.Builder()

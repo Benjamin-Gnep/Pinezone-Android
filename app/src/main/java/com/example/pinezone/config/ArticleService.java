@@ -16,5 +16,8 @@ public interface ArticleService {
                                        @Query("page")int page,
                                        @Query("pageSize")int pageSize);
 
-    Call<ResponseBody> getArticle();
+    @GET("userArticle-list")
+    Call<List<Article>> getUserArticleList(@Query("uid")int cid,
+                                       @Query("page")int page,
+                                       @Query("pageSize")int pageSize);
 }
