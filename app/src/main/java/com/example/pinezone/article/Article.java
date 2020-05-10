@@ -9,8 +9,14 @@ public class Article{
     private int aid;
     private int likenum;
     private List<ArticleImage> aimg;
-    private String date;
     private String username;
+
+    private String content;
+    private String datetime;
+    private int islike;
+    private String describe;
+    private int commentnum;
+    private int starnum;
 
     public static class ArticleImage{
         public int id;
@@ -38,9 +44,6 @@ public class Article{
         return aimg;
     }
 
-    public String getDate() {
-        return date;
-    }
 
     public String getUimg() {
         return uimg;
@@ -48,5 +51,29 @@ public class Article{
 
     public String getUsername() {
         return username;
+    }
+
+    public int getCommentnum() {
+        return commentnum;
+    }
+
+    public int getIslike() {
+        return islike;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public int getStarnum() {
+        return starnum;
+    }
+
+    public String getDescribe() {
+        return describe;
     }
 }

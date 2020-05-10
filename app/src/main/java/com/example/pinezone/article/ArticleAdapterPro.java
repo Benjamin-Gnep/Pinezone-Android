@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -37,12 +38,11 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
     protected void convert(BaseViewHolder helper, Article article) {
         helper.setText(R.id.article_title,article.getTitle())
                 .setText(R.id.article_author_name,article.getUsername())
-                .setText(R.id.like_num,String.valueOf(article.getLikenum()));
+                .setText(R.id.like_num,String.valueOf(article.getLikenum()))
+                .setText(R.id.article_id,String.valueOf(article.getAid()));
+
         ImageView userImage = helper.findView(R.id.article_author_image);
         ImageView articleImage = helper.findView(R.id.article_image);
-//        userImage.setImageResource(R.drawable.default_background);
-//        articleImage.setImageResource(R.drawable.default_background);
-//        Log.e("ArticleAdapterPro", String.valueOf(article.getAimg().get(0).path));
         Glide.with((getContext())).load(article.getAimg().get(0).path)
                 .listener(new RequestListener<Drawable>() {
                     @Override

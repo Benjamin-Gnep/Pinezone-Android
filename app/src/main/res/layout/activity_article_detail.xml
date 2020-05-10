@@ -20,6 +20,7 @@
         android:background="@color/white"
         android:elevation="@dimen/line2">
         <Button
+            android:id="@+id/detail_add_comment"
             android:layout_width="160dp"
             android:layout_height="@dimen/line4"
             android:layout_marginLeft="@dimen/line2"
@@ -31,32 +32,32 @@
             tools:targetApi="lollipop" />
         
         <Button
+            android:id="@+id/detail_like_button"
             android:layout_width="56dp"
             android:layout_height="@dimen/line4"
             android:layout_marginLeft="@dimen/line2"
             android:background="@null"
             android:stateListAnimator="@null"
             android:drawableLeft="@drawable/tab_like"
-            android:text="179"
             android:textColor="@color/colorPrimaryLight"
             tools:targetApi="lollipop"/>
         <Button
+            android:id="@+id/detail_star_button"
             android:layout_width="56dp"
             android:layout_height="@dimen/line4"
             android:background="@null"
             android:layout_marginLeft="@dimen/line1"
             android:stateListAnimator="@null"
             android:drawableLeft="@drawable/tab_star"
-            android:text="179"
             android:textColor="@color/colorPrimaryLight"
             tools:targetApi="lollipop"/>
         <Button
+            android:id="@+id/detail_comment_button"
             android:layout_width="56dp"
             android:layout_height="@dimen/line4"
             android:background="@null"
             android:drawableLeft="@drawable/tab_notification"
             android:layout_marginLeft="@dimen/line1"
-            android:text="179"
             android:textColor="@color/colorPrimaryLight"
             android:stateListAnimator="@null"
             tools:targetApi="lollipop"/>
@@ -102,8 +103,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:riv_corner_radius="@dimen/line3"
-                android:src="@drawable/user"/>
+                app:riv_corner_radius="@dimen/line3"/>
 
             <TextView
                 android:id="@+id/detail_author_name"
@@ -115,7 +115,6 @@
                 android:layout_marginLeft="@dimen/line2"
                 android:textSize="@dimen/H5"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="阿苯不加奶盖"
                 />
 
             <TextView
@@ -128,7 +127,6 @@
                 android:layout_marginLeft="@dimen/line2"
                 android:textSize="@dimen/annotation"
                 android:textColor="@color/colorPrimaryLight"
-                android:text="资深吃货 外卖达人"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -217,7 +215,6 @@
                         android:textSize="@dimen/H2"
                         android:textColor="@color/black"
                         android:paddingHorizontal="@dimen/line2"
-                        android:text="瑞幸咖啡的最佳搭配"
                         />
 
                     <TextView
@@ -232,7 +229,6 @@
                         android:textColor="@color/black"
                         android:paddingHorizontal="@dimen/line2"
                         android:lineHeight="@dimen/H1"
-                        android:text="瑞幸咖啡的最佳搭配瑞幸咖啡的最佳搭"
                         />
 
                     <TextView
@@ -246,7 +242,6 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/colorPrimaryLight"
                         android:paddingHorizontal="@dimen/line2"
-                        android:text="编辑于2020-03-21"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

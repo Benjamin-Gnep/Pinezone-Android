@@ -141,9 +141,12 @@ public class ArticleListFragment extends Fragment {
         articleRecyclerView.setHasFixedSize(true);
 
         articleRecyclerView.setLayoutManager(layoutManager);
+
         articleAdapter = new ArticleAdapterPro(getContext(),new ArrayList<Article>());
+        articleAdapter.setAnimationEnable(true);
         articleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
-                R.id.article_author_image,R.id.article_author_name,R.id.article_title);
+                R.id.article_author_image,R.id.article_author_name,R.id.article_title,
+                R.id.article_id);
         articleAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
             @Override
             public void onItemChildClick(@NonNull BaseQuickAdapter adapter,
@@ -151,7 +154,11 @@ public class ArticleListFragment extends Fragment {
                 switch (view.getId()){
                     case R.id.article_image:
                     case R.id.article_title:
-                        ArticleDetailActivity.StartActivity(getActivity(),111);
+                        ConstraintLayout layout = (ConstraintLayout) view.getParent();
+                        TextView textView = layout.findViewById(R.id.article_id);
+                        int aid = Integer.parseInt(textView.getText().toString());
+                        int uid = MainActivity.getUid();
+                        ArticleDetailActivity.StartActivity(getActivity(),aid,uid);
                         break;
                 }
             }

@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends BasicActivity {
+    private static int uid;
+
     private long exitTime = 0;
 
     @Override
@@ -62,9 +64,19 @@ public class MainActivity extends BasicActivity {
                     }
                 });
         ActivityCollector.addActivity(this);
+        initUid();
     }
 
-//    @Override
+    private void initUid() {
+        SharedPreferences sp = getSharedPreferences("setting",MODE_PRIVATE);
+        uid = sp.getInt("id",0);
+    }
+
+    public static int getUid() {
+        return uid;
+    }
+
+    //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
 //            if((System.currentTimeMillis()-exitTime) > 2000){
