@@ -101,22 +101,25 @@ public class ArticleDetailActivity extends BasicActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        detailAuthorName.setText(article.getUsername());
-                        detailAuthorDescribe.setText(article.getDescribe());
-                        detailTitle.setText(article.getTitle());
-                        detailContent.setText(article.getContent());
-                        detailDate.setText("编辑于 " + article.getDatetime());
-                        Glide.with(ArticleDetailActivity.this)
-                                .load(article.getUimg()).into(detailAuthorImage);
-                        for(int i = 0 ; i < article.getAimg().size();i++){
-                            detailImageGroup.add(article.getAimg().get(i).path);
-                            Log.e("TAG",article.getAimg().get(i).path );
+                        try{
+                            detailAuthorName.setText(article.getUsername());
+                            detailAuthorDescribe.setText(article.getDescribe());
+                            detailTitle.setText(article.getTitle());
+                            detailContent.setText(article.getContent());
+                            detailDate.setText("编辑于 " + article.getDatetime());
+                            Glide.with(ArticleDetailActivity.this)
+                                    .load(article.getUimg()).into(detailAuthorImage);
+                            for(int i = 0 ; i < article.getAimg().size();i++){
+                                detailImageGroup.add(article.getAimg().get(i).path);
+                                Log.e("TAG",article.getAimg().get(i).path );
+                            }
+                            detailLikeButton.setText(String.valueOf(article.getLikenum()));
+                            detailStarButton.setText(String.valueOf(article.getStarnum()));
+                            detailCommentButton.setText(String.valueOf(article.getCommentnum()));
+                            setAdapter();
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
-                        detailLikeButton.setText(String.valueOf(article.getLikenum()));
-                        detailStarButton.setText(String.valueOf(article.getStarnum()));
-                        detailCommentButton.setText(String.valueOf(article.getCommentnum()));
-                        setAdapter();
-
                     }
                 });
 
@@ -167,20 +170,6 @@ public class ArticleDetailActivity extends BasicActivity {
                 Log.e("TAG", s );
                 Glide.with(ArticleDetailActivity.this)
                         .load(s).into(imageView);
-
-//                Resources resources = getContext().getResources();
-//                //获取屏幕数据
-//                DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-//                //获取屏幕宽高，单位是像素
-//                int widthPixels = displayMetrics.widthPixels;
-//                ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-//                lp.width = widthPixels;
-//                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                if(lp.height > 2 * lp.width){
-//                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                    lp.height = 2*lp.width;
-//                }
-//                imageView.setLayoutParams(lp);
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             }
         };

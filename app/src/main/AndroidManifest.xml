@@ -20,9 +20,10 @@
         android:roundIcon="@mipmap/act_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.mine.MineInfo"></activity>
         <activity
             android:name=".ui.setting.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
         <activity android:name=".ui.search.Search" />
         <activity android:name=".ui.achievement.Achievement" />
         <activity android:name=".ui.publish.PublishArticle" />

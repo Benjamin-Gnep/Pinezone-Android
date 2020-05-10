@@ -15,6 +15,7 @@
     <dimen name="line3">24dp</dimen>
     <dimen name="line4">32dp</dimen>
     <dimen name="line5">40dp</dimen>
+    <dimen name="line6">48dp</dimen>
     <dimen name="line7">56dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
