@@ -1,9 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.publish.PublishArticle">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_color_white"
+    tools:context="com.example.pinezone.ui.publish.PublishArticle">
 
+    <include layout="@layout/pinezone_action_threebutton_bar"
+        android:id="@+id/publish_article_actionbar"
+        android:layout_marginTop="@dimen/line2"
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/publish_article_actionbar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:clipChildren="false">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_delete_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="@color/subColor"
+            android:drawableTop="@drawable/picture_icon_delete"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/app_drag_delete"
+            android:textColor="@color/app_color_white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/publish_article_recycler"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/line2"
+            android:layout_marginRight="@dimen/line2"
+            android:overScrollMode="never" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/publish_article_recycler"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@id/title"
+                    android:layout_marginLeft="@dimen/line2"
+                    android:layout_marginRight="@dimen/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line6"
+                    android:layout_marginTop="@dimen/line3"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="@dimen/H3"
+                    android:typeface="monospace"
+                    android:maxLines="1"
+                    android:theme="@style/MyEditText"
+                    android:hint=" 给你的文章起个标题"
+                    />
+
+                <EditText
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginLeft="@dimen/line2"
+                    android:layout_marginRight="@dimen/line2"
+                    android:textSize="@dimen/H5"
+                    android:lineHeight="@dimen/H1"
+                    android:enabled="true"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:minLines="12"
+                    android:scrollbars="vertical"
+                    android:background="@null"
+                    android:theme="@style/MyEditText"
+                    android:hint="  选完图片赶快写下你想分享的内容吧！"/>
+
+                <TextView
+                    android:id="@+id/topic"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line7"
+                    app:layout_constraintTop_toBottomOf="@id/content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginLeft="@dimen/line2"
+                    android:layout_marginRight="@dimen/line2"
+                    android:drawableLeft="@drawable/ic_topic"
+                    android:drawableRight="@drawable/ic_goto"
+                    android:paddingRight="@dimen/line2"
+                    android:text="   添加话题"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/H5"
+                    android:background="@color/white"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line7"
+                    app:layout_constraintTop_toBottomOf="@id/topic"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginLeft="@dimen/line2"
+                    android:layout_marginRight="@dimen/line2"
+                    android:drawableLeft="@drawable/ic_location_2x"
+                    android:drawableRight="@drawable/ic_goto"
+                    android:paddingRight="@dimen/line2"
+                    android:text="   你的位置"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/H5"
+                    android:background="@color/white"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

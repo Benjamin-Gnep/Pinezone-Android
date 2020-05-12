@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许读取手机状态（必须） -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许访问网络状态（必须） -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许写手机存储（必须） -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许读取手机存储（必须） -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" /> <!-- GUI自动填充验证码功能（非必须） -->
     <uses-permission android:name="android.permission.READ_SMS" /> <!-- 从短信中读取验证码接口（非必须） -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -27,7 +28,6 @@
         <activity android:name=".ui.search.Search" />
         <activity android:name=".ui.achievement.Achievement" />
         <activity android:name=".ui.publish.PublishArticle" />
-        <activity android:name=".ui.publish.PublishImage" />
         <activity android:name=".ui.publish.PublishType" />
         <activity android:name=".article.ArticleDetailActivity" />
         <activity

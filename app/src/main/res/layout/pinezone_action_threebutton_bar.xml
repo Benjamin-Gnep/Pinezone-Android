@@ -37,7 +37,7 @@
         />
 
     <Button
-        android:id="@+id/detail_subscribe"
+        android:id="@+id/next_button"
         android:layout_width="72dp"
         android:layout_height="24dp"
         app:layout_constraintRight_toRightOf="parent"
