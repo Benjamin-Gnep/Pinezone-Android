@@ -2,15 +2,19 @@ package com.example.pinezone.ui.publish;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,17 +27,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pinezone.BasicActivity;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleDetailActivity;
+import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.FullyGridLayoutManager;
 import com.example.pinezone.config.GlideEngine;
 import com.example.pinezone.config.GridImageAdapter;
+import com.example.pinezone.config.UserService;
 import com.example.pinezone.listener.DragListener;
 
 import com.luck.picture.lib.PictureSelector;
@@ -58,11 +67,23 @@ import com.luck.picture.lib.tools.ScreenUtils;
 import com.luck.picture.lib.tools.ToastUtils;
 import com.luck.picture.lib.tools.ValueOf;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class PublishArticle extends BasicActivity implements View.OnClickListener{
     private static final String TAG = "PublishArticle";
@@ -86,6 +107,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
     private PictureCropParameterStyle mCropParameterStyle;
     private ItemTouchHelper mItemTouchHelper;
     private DragListener mDragListener;
+    private int REQ;
 
     public static void StartActivity(Context context, int type){
         Intent intent = new Intent(context, PublishArticle.class);
@@ -128,6 +150,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                     AlertDialog dialog=builder.create();
                     dialog.show();
                 }else{
+                    publishArticle();
                     AlertDialog.Builder builder=new AlertDialog.Builder(this);
                     builder.setTitle("发布成功");
                     builder.setMessage("你已经成功发布文章了奥，待管理员审核后便会出现在文章列表中，你可以前往" +
@@ -149,6 +172,92 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    private void publishArticle() {
+
+        if (ContextCompat.checkSelfPermission(PublishArticle.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED){
+            //有权限的情况
+        }else{
+            //没有权限，进行权限申请
+            //REQ是本次请求的辨认编号,即 requestCode
+            ActivityCompat.requestPermissions(PublishArticle.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQ);
+        }
+
+        //HttpLoggingInterceptor打印流程
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override public void log(String message) {
+                Log.d("MyTAG", "OkHttp: " + message);
+            }
+        });
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient okClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .client(okClient)
+                .build();
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
+        RequestBody cidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),String.valueOf(1));
+        RequestBody titleBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),title.getText().toString());
+        RequestBody contentBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),content.getText().toString());
+
+
+        List<MultipartBody.Part> fileList = new ArrayList<>();
+        for(int i = 0;i < mAdapter.getData().size();i++){
+            File file = new File(mAdapter.getData().get(i).getCompressPath());
+            Log.e(TAG, file.getPath());
+            RequestBody fileRequestBody =
+                    RequestBody.create(MediaType.parse("multipart/form-data"),file);
+            MultipartBody.Part filePart =
+                    MultipartBody.Part.createFormData("imgs", file.getName(), fileRequestBody);
+            fileList.add(filePart);
+        }
+        Call<ResponseBody> call = articleService.publishArticle(uidBody,cidBody,titleBody,contentBody,
+                fileList);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                assert response.body() != null;
+                Log.e(TAG, response.body().toString() );
+                clearCache();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    /**
+     * 把content uri转为 文件路径
+     *
+     * @param contentUri      要转换的content uri
+     * @param contentResolver 解析器
+     * @return
+     */
+    public static String getFilePathFromContentUri(String contentUri,
+                                                   ContentResolver contentResolver) {
+        String filePath;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+
+        Cursor cursor = contentResolver.query(Uri.parse(contentUri), filePathColumn, null, null, null);
+
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
     }
 
     private void initView() {
@@ -405,8 +514,9 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                         .setPictureCropStyle(mCropParameterStyle)// 动态自定义裁剪主题
                         .maxSelectNum(maxSelectNum)// 最大图片选择数量
                         .minSelectNum(1)// 最小选择数量
+//                        .isOriginalImageControl(true)
                         .isCompress(true)// 是否压缩
-                        .compressQuality(80)// 图片压缩后输出质量 0~ 100
+                        .compressQuality(20)// 图片压缩后输出质量 0~ 100
 //                        .isEnableCrop(true)// 是否裁剪
 //                        .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
 //                        .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false

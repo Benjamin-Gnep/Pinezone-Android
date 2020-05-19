@@ -153,12 +153,6 @@ public class MineFragment extends Fragment {
                         mineArticleAdapter.loadMore(articleList);
                     }
                 } else {
-                    try{
-                        Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
                 }
             }
             @Override
