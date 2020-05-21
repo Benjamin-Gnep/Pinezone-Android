@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private HomeViewModel homeViewModel;
 
 
-    private Button logoutButton;
+
     private Button canteenButton;
     private Button playButton;
     private Button storeButton;
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void initView(View root) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        logoutButton = root.findViewById(R.id.logout);
+
         canteenButton = root.findViewById(R.id.home_canteen);
         storeButton = root.findViewById(R.id.home_store);
         playButton = root.findViewById(R.id.home_play);
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         pref = getContext().getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = pref.edit();
-        logoutButton.setOnClickListener(this);
+
         canteenButton.setOnClickListener(this);
         storeButton.setOnClickListener(this);
         playButton.setOnClickListener(this);
@@ -118,11 +118,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (v.getId()){
-            case R.id.logout:
-                editor.clear();
-                editor.apply();
-                ActivityCollector.finishAll();
-                break;
             case R.id.home_canteen:
                 articleListFragment = ArticleListFragment.newInstance(ArticleConstant.TYPE_CANTEEN);
                 transaction.addToBackStack(null);

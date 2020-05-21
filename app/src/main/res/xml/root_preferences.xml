@@ -1,35 +1,31 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="设置">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+        <PreferenceScreen app:title="用户隐私说明">
+        </PreferenceScreen>
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+        <PreferenceScreen app:title="检测更新">
+        </PreferenceScreen>
+
+        <PreferenceScreen app:title="鼓励我们">
+        </PreferenceScreen>
+
+        <PreferenceScreen app:title="关于松果生活">
+        </PreferenceScreen>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="账号管理">
+        <PreferenceScreen app:title="绑定教务处">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+        </PreferenceScreen>
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+        <PreferenceScreen app:title="注销账号">
+<!--            <intent android:targetPackage="com.example.pinezone"-->
+<!--                android:targetClass="com.example.pinezone.MainActivity"/>-->
+        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

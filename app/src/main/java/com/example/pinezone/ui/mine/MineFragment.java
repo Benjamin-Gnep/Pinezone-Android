@@ -4,6 +4,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,15 +20,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleAdapterPro;
 import com.example.pinezone.config.ArticleService;
+import com.example.pinezone.ui.setting.SettingsActivity;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
@@ -45,6 +49,10 @@ public class MineFragment extends Fragment {
     private static final String TAG = "MineFragment";
 
     private int page = 1;
+
+    private ImageButton setting;
+    private ImageButton QRcode;
+    private Button editInfo;
 
     private MineViewModel mineViewModel;
     private TextView userName;
@@ -65,12 +73,13 @@ public class MineFragment extends Fragment {
 
     public static MineFragment newInstance() {
         return new MineFragment();
-
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_mine, container, false);
+        initView(root);
         final StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL){
                     @Override
@@ -117,13 +126,6 @@ public class MineFragment extends Fragment {
                 }
             });
         }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_mine, container, false);
-        initView(root);
         return root;
     }
 
@@ -183,6 +185,10 @@ public class MineFragment extends Fragment {
         userFollow = root.findViewById(R.id.follow);
         userArticle = root.findViewById(R.id.article);
 
+        setting = root.findViewById(R.id.mine_setting);
+        QRcode = root.findViewById(R.id.mine_QR);
+        editInfo = root.findViewById(R.id.edit_info_button);
+
         mineViewModel.getUserName().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -199,7 +205,7 @@ public class MineFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final String s) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    Glide.with(Objects.requireNonNull(getContext())).load(s).into(userImage);
+                    Glide.with(requireContext()).load(s).into(userImage);
                 }
             }
         });
@@ -244,6 +250,14 @@ public class MineFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 userArticle.setText(s);
+            }
+        });
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SettingsActivity.class);
+                startActivity(intent);
             }
         });
     }

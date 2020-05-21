@@ -66,18 +66,7 @@
         android:gravity="center"
         android:textColor="@color/colorPrimaryLight"/>
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="@id/home_pet"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/button_circle_shape"
-        android:textColor="@color/white"
-        android:text="点此退出登录"
-        />
+
 
     <!--button组-->
 
