@@ -36,17 +36,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
-import com.example.pinezone.article.Article;
-import com.example.pinezone.article.ArticleDetailActivity;
 import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.FullyGridLayoutManager;
 import com.example.pinezone.config.GlideEngine;
 import com.example.pinezone.config.GridImageAdapter;
-import com.example.pinezone.config.UserService;
 import com.example.pinezone.listener.DragListener;
 
 import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.animators.AnimationType;
 import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
 import com.luck.picture.lib.config.PictureConfig;
@@ -54,23 +50,18 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.language.LanguageConfig;
 import com.luck.picture.lib.listener.OnCustomCameraInterfaceListener;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.luck.picture.lib.listener.OnVideoSelectedPlayCallback;
 import com.luck.picture.lib.permissions.PermissionChecker;
 import com.luck.picture.lib.style.PictureCropParameterStyle;
 import com.luck.picture.lib.style.PictureParameterStyle;
-import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.PictureFileUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 import com.luck.picture.lib.tools.ToastUtils;
-import com.luck.picture.lib.tools.ValueOf;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,6 +80,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
     private static final String TAG = "PublishArticle";
     private static final String ARTICLE_TYPE = "articleType";
     private int maxSelectNum = 6;
+    private int articleType;
     private TextView tvDeleteText;
 
     private RecyclerView mRecyclerView;
@@ -123,6 +115,8 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         } else {
             clearCache();
         }
+        Intent intent = getIntent();
+        articleType = intent.getIntExtra(ARTICLE_TYPE,1);
         setContentView(R.layout.activity_publish_article);
         getWhiteStyle();
         initView();
@@ -150,20 +144,8 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                     AlertDialog dialog=builder.create();
                     dialog.show();
                 }else{
+                    publish.setClickable(false);
                     publishArticle();
-                    AlertDialog.Builder builder=new AlertDialog.Builder(this);
-                    builder.setTitle("发布成功");
-                    builder.setMessage("你已经成功发布文章了奥，待管理员审核后便会出现在文章列表中，你可以前往" +
-                            "我的页面进行查看并重新编辑文章");
-                    builder.setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    PublishActivityCollector.finishAll();
-                                }
-                            });
-                    AlertDialog dialog=builder.create();
-                    dialog.show();
                 }
                 break;
             case R.id.back_button:
@@ -203,7 +185,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         RequestBody uidBody = RequestBody.create
                 (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
         RequestBody cidBody = RequestBody.create
-                (MediaType.parse("multipart/form-data"),String.valueOf(1));
+                (MediaType.parse("multipart/form-data"),String.valueOf(articleType));
         RequestBody titleBody = RequestBody.create
                 (MediaType.parse("multipart/form-data"),title.getText().toString());
         RequestBody contentBody = RequestBody.create
@@ -226,9 +208,30 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                assert response.body() != null;
-                Log.e(TAG, response.body().toString() );
-                clearCache();
+
+                if(response.body()==null){
+                    publish.setClickable(true);
+                    Toast.makeText(getContext(),"图片过大，请压缩图片或减少图片数量后重试",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.e(TAG, response.body().toString() );
+                    clearCache();
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    builder.setTitle("发布成功");
+                    builder.setMessage("你已经成功发布文章了奥，待管理员审核后便会出现在文章列表中，你可以前往" +
+                            "我的页面进行查看并重新编辑文章");
+                    builder.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    PublishActivityCollector.finishAll();
+                                }
+                            });
+                    AlertDialog dialog=builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
+                }
+
             }
 
             @Override
@@ -236,28 +239,6 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                 Log.e(TAG, t.toString());
             }
         });
-    }
-
-    /**
-     * 把content uri转为 文件路径
-     *
-     * @param contentUri      要转换的content uri
-     * @param contentResolver 解析器
-     * @return
-     */
-    public static String getFilePathFromContentUri(String contentUri,
-                                                   ContentResolver contentResolver) {
-        String filePath;
-        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
-
-        Cursor cursor = contentResolver.query(Uri.parse(contentUri), filePathColumn, null, null, null);
-
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
     }
 
     private void initView() {

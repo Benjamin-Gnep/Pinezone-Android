@@ -14,6 +14,7 @@ public class Article{
     private String content;
     private String datetime;
     private int islike;
+    private int isstar;
     private String describe;
     private int commentnum;
     private int starnum;
