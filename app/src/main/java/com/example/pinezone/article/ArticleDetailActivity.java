@@ -116,6 +116,12 @@ public class ArticleDetailActivity extends BasicActivity {
                             detailLikeButton.setText(String.valueOf(article.getLikenum()));
                             detailStarButton.setText(String.valueOf(article.getStarnum()));
                             detailCommentButton.setText(String.valueOf(article.getCommentnum()));
+                            if(article.getIslike() == 1){
+                                detailLikeButton.setSelected(true);
+                            }
+                            if(article.getIsStar() == 1){
+                                detailStarButton.setSelected(true);
+                            }
                             setAdapter();
                         }catch (Exception e){
                             e.printStackTrace();

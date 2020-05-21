@@ -38,7 +38,7 @@
             android:layout_marginLeft="@dimen/line2"
             android:background="@null"
             android:stateListAnimator="@null"
-            android:drawableLeft="@drawable/tab_like"
+            android:drawableLeft="@drawable/like_button"
             android:textColor="@color/colorPrimaryLight"
             tools:targetApi="lollipop"/>
         <Button
@@ -48,7 +48,7 @@
             android:background="@null"
             android:layout_marginLeft="@dimen/line1"
             android:stateListAnimator="@null"
-            android:drawableLeft="@drawable/tab_star"
+            android:drawableLeft="@drawable/star_button"
             android:textColor="@color/colorPrimaryLight"
             tools:targetApi="lollipop"/>
         <Button

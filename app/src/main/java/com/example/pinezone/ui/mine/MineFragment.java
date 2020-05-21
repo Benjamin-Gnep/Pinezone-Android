@@ -1,9 +1,11 @@
 package com.example.pinezone.ui.mine;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,10 +29,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleAdapterPro;
+import com.example.pinezone.article.ArticleDetailActivity;
 import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.ui.setting.SettingsActivity;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -75,6 +81,7 @@ public class MineFragment extends Fragment {
         return new MineFragment();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -103,7 +110,29 @@ public class MineFragment extends Fragment {
             }
         });
 
+        mineArticleAdapter.setAnimationEnable(true);
+        mineArticleAdapter.addChildClickViewIds(R.id.article_image,R.id.like_button,
+                R.id.article_author_image,R.id.article_author_name,R.id.article_title,
+                R.id.article_id);
+        mineArticleAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(@NonNull BaseQuickAdapter adapter,
+                                         @NonNull View view, int position) {
+                switch (view.getId()){
+                    case R.id.article_image:
+                    case R.id.article_title:
+                        ConstraintLayout layout = (ConstraintLayout) view.getParent();
+                        TextView textView = layout.findViewById(R.id.article_id);
+                        int aid = Integer.parseInt(textView.getText().toString());
+                        int uid = MainActivity.getUid();
+                        ArticleDetailActivity.StartActivity(getActivity(),aid,uid);
+                        break;
+                }
+            }
+        });
+
         articleRecyclerView.setAdapter(mineArticleAdapter);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
@@ -126,6 +155,7 @@ public class MineFragment extends Fragment {
                 }
             });
         }
+
         return root;
     }
 

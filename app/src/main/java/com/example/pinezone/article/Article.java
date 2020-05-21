@@ -14,7 +14,7 @@ public class Article{
     private String content;
     private String datetime;
     private int islike;
-    private int isstar;
+    private int isStar;
     private String describe;
     private int commentnum;
     private int starnum;
@@ -60,6 +60,10 @@ public class Article{
 
     public int getIslike() {
         return islike;
+    }
+
+    public int getIsStar() {
+        return isStar;
     }
 
     public String getContent() {
