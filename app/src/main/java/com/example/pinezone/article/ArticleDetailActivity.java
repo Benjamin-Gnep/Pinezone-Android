@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.pinezone.BasicActivity;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.config.ArticleService;
 
@@ -30,6 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +60,13 @@ public class ArticleDetailActivity extends BasicActivity {
     private Button detailLikeButton;
     private Button detailStarButton;
     private Button detailCommentButton;
+    private Button detailSubscribeButton;
 //    private BannerPagerView detailImageView;
+
+    private Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://111.230.173.4:8081/v1/")
+            .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+            .build();
 
     public static void StartActivity(Context context, int articleId, int userId){
         Intent intent = new Intent(context,ArticleDetailActivity.class);
@@ -86,11 +97,6 @@ public class ArticleDetailActivity extends BasicActivity {
     }
 
     private void loadArticle() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://111.230.173.4:8081/v1/")
-                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
-                .build();
-
         final ArticleService articleService = retrofit.create(ArticleService.class);
         Call<Article> call = articleService.getArticle(articleId, userId);
         call.enqueue(new Callback<Article>() {
@@ -122,6 +128,9 @@ public class ArticleDetailActivity extends BasicActivity {
                             if(article.getIsStar() == 1){
                                 detailStarButton.setSelected(true);
                             }
+                            if(article.getUid() == MainActivity.getUid()){
+                                detailSubscribeButton.setText("修改");
+                            }
                             setAdapter();
                         }catch (Exception e){
                             e.printStackTrace();
@@ -143,12 +152,6 @@ public class ArticleDetailActivity extends BasicActivity {
 
         detailImageGroup = new ArrayList<>();
 
-        //detailImageGroup = getImageGroup();
-//        for(int i = 0; i < 2;i++){
-//            detailImageGroup.add(R.drawable.t5);
-//            detailImageGroup.add(R.drawable.t1);
-//        }
-
         detailAuthorImage = findViewById(R.id.detail_author_image);
         detailAuthorName = findViewById(R.id.detail_author_name);
         detailAuthorDescribe = findViewById(R.id.detail_author_describe);
@@ -158,6 +161,7 @@ public class ArticleDetailActivity extends BasicActivity {
         detailCommentButton = findViewById(R.id.detail_comment_button);
         detailLikeButton = findViewById(R.id.detail_like_button);
         detailStarButton = findViewById(R.id.detail_star_button);
+        detailSubscribeButton = findViewById(R.id.detail_subscribe);
 
         detailImageView = findViewById(R.id.detail_image_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -165,6 +169,134 @@ public class ArticleDetailActivity extends BasicActivity {
         detailImageView.setLayoutManager(linearLayoutManager);
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(detailImageView);
+
+        //点赞图标逻辑
+        detailLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                detailLikeButton.setClickable(false);
+                if(!detailLikeButton.isSelected()){
+                    detailLikeButton.setSelected(true);
+                    detailLikeButton.setText(String.valueOf(
+                            Integer.parseInt(detailLikeButton.getText().toString())+1));
+                    final ArticleService articleService = retrofit.create(ArticleService.class);
+                    RequestBody uidBody = RequestBody.create
+                            (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
+                    RequestBody cidBody = RequestBody.create
+                            (MediaType.parse("multipart/form-data"),String.valueOf(articleId));
+                    Call<ResponseBody> call = articleService.like(uidBody,cidBody);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            if(response.body()!=null){
+                                Log.e("点赞回执", response.body().toString() );
+                                detailLikeButton.setClickable(true);
+                            }else{
+                                Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ResponseBody> call,
+                                              @NonNull Throwable t) {
+                            Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    detailLikeButton.setSelected(false);
+                    final ArticleService articleService = retrofit.create(ArticleService.class);
+                    detailLikeButton.setText(String.valueOf(
+                            Integer.parseInt(detailLikeButton.getText().toString())-1));
+
+                    Call<ResponseBody> call = articleService.unlike(MainActivity.getUid(),
+                            (long) articleId);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.body()!=null){
+                                Log.e("点赞回执", response.body().toString() );
+                                detailLikeButton.setClickable(true);
+                            }else{
+                                Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
+        //收藏按钮逻辑
+        detailStarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                detailStarButton.setClickable(false);
+                if(!detailStarButton.isSelected()){
+                    detailStarButton.setSelected(true);
+                    detailStarButton.setText(String.valueOf(
+                            Integer.parseInt(detailStarButton.getText().toString())+1));
+                    final ArticleService articleService = retrofit.create(ArticleService.class);
+                    RequestBody uidBody = RequestBody.create
+                            (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
+                    RequestBody cidBody = RequestBody.create
+                            (MediaType.parse("multipart/form-data"),String.valueOf(articleId));
+                    Call<ResponseBody> call = articleService.star(uidBody,cidBody);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.body()!=null){
+                                Log.e("收藏回执", response.body().toString() );
+                                detailStarButton.setClickable(true);
+                            }else{
+                                Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    detailStarButton.setSelected(false);
+                    final ArticleService articleService = retrofit.create(ArticleService.class);
+                    detailStarButton.setText(String.valueOf(
+                            Integer.parseInt(detailStarButton.getText().toString())-1));
+
+                    Call<ResponseBody> call = articleService.unstar(MainActivity.getUid(),
+                            (long) articleId);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.body()!=null){
+                                Log.e("收藏回执", response.body().toString() );
+                                detailStarButton.setClickable(true);
+                            }else{
+                                Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     void setAdapter(){

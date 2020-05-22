@@ -10,7 +10,12 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -40,4 +45,31 @@ public interface ArticleService {
                                       @Part("title") RequestBody title,
                                       @Part("content") RequestBody content,
                                       @Part List<MultipartBody.Part> imgs);
+
+    @Multipart
+    @POST("like")
+    Call<ResponseBody> like(@Part("uid") RequestBody uid,
+                            @Part("aid") RequestBody aid);
+
+//    @Multipart
+//    @DELETE("like")
+//    Call<ResponseBody> unlike(@Part("uid") RequestBody uid,
+//                              @Part("aid") RequestBody aid);
+
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @HTTP(method = "DELETE", path = "like", hasBody = true)
+    @FormUrlEncoded
+    Call<ResponseBody> unlike(@Field("uid") int uid,
+                              @Field("aid") Long aid);
+
+    @Multipart
+    @POST("star")
+    Call<ResponseBody> star(@Part("uid") RequestBody uid,
+                            @Part("aid") RequestBody aid);
+
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @HTTP(method = "DELETE", path = "star", hasBody = true)
+    @FormUrlEncoded
+    Call<ResponseBody> unstar(@Field("uid") int uid,
+                              @Field("aid") Long aid);
 }

@@ -237,6 +237,8 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e(TAG, t.toString());
+                Toast.makeText(getContext(),"网络错误",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
