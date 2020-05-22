@@ -72,4 +72,9 @@ public interface ArticleService {
     @FormUrlEncoded
     Call<ResponseBody> unstar(@Field("uid") int uid,
                               @Field("aid") Long aid);
+
+    @GET("userStar-list")
+    Call<List<Article>> getUserStarArticleList(@Query("uid")int uid,
+                                               @Query("page")int page,
+                                               @Query("pageSize")int pageSize);
 }

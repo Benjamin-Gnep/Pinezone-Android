@@ -208,11 +208,7 @@ public class StarFragment extends Fragment {
         final ArticleService articleService = retrofit.create(ArticleService.class);
 
         Call<List<Article>> call;
-
-
-        call = articleService.getArticleList(1,page,10);
-
-
+        call = articleService.getUserStarArticleList(MainActivity.getUid(),page,10);
         call.enqueue(new Callback<List<Article>>() {
             @Override
             public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
@@ -226,13 +222,6 @@ public class StarFragment extends Fragment {
                         articleAdapter.loadMore(articleList);
                     }
                     articleRecyclerView.requestLayout();
-                } else {
-                    try{
-                        Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
                 }
             }
             @Override
