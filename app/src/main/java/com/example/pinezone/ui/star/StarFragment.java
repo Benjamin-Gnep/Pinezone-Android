@@ -159,7 +159,6 @@ public class StarFragment extends Fragment {
         currentPage = 1;
         requestPage = 1;
         getArticleList(requestPage);
-        articleAdapter.notifyDataSetChanged();
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -226,6 +225,7 @@ public class StarFragment extends Fragment {
                     }else{
                         articleAdapter.loadMore(articleList);
                     }
+                    articleRecyclerView.requestLayout();
                 } else {
                     try{
                         Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();

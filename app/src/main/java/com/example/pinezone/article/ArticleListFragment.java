@@ -166,7 +166,6 @@ public class ArticleListFragment extends Fragment {
         currentPage = 1;
         requestPage = 1;
         getArticleList(requestPage);
-        articleAdapter.notifyDataSetChanged();
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -207,18 +206,6 @@ public class ArticleListFragment extends Fragment {
 
     private void getArticleList(final int page){
         final List<Article> articleList = new ArrayList<>();
-//        for(int i = 0;i < 3; i++){
-//            Article coffee = new Article("瑞幸咖啡LuckinCoffee",R.drawable.t5);
-//            articleList.add(coffee);
-//            Article milktea = new Article("一点点奶茶ALittleMilkTea",R.drawable.t1);
-//            articleList.add(milktea);
-//            Article soup = new Article("福建小吃FujianLocalSoup",R.drawable.t2);
-//            articleList.add(soup);
-//            Article noodle = new Article("猪肉面PorkNoodle",R.drawable.t3);
-//            articleList.add(noodle);
-//            Article jiaozi = new Article("沙县饺子ShaxianJiaozi",R.drawable.t4);
-//            articleList.add(jiaozi);
-//        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://111.230.173.4:8081/v1/")
@@ -256,6 +243,7 @@ public class ArticleListFragment extends Fragment {
                     }else{
                         articleAdapter.loadMore(articleList);
                     }
+                    articleRecyclerView.requestLayout();
                 } else {
                     try{
                         Toast.makeText(getActivity(),"没有更多了",Toast.LENGTH_SHORT).show();

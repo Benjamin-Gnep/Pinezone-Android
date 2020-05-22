@@ -99,7 +99,6 @@ public class MineFragment extends Fragment {
 
         page = 1;
         getMineArticle(page);
-        mineArticleAdapter.notifyDataSetChanged();
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -184,6 +183,7 @@ public class MineFragment extends Fragment {
                     }else{
                         mineArticleAdapter.loadMore(articleList);
                     }
+                    articleRecyclerView.requestLayout();
                 } else {
                 }
             }
