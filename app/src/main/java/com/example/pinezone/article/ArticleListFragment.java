@@ -38,16 +38,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ArticleListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ArticleListFragment extends Fragment {
     private static final String TAG = "ArticleListFragment";
     
     private static final String ARG_ARTICLE_TYPE = "articleType";
-    private static final String ARG_PARAM2 = "param2";
 
     private RecyclerView articleRecyclerView;
     private RefreshLayout refreshLayout;
