@@ -230,4 +230,5 @@ public class StarFragment extends Fragment {
             }
         });
     }
+
 }

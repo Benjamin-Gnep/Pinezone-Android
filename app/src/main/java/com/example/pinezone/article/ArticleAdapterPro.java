@@ -63,8 +63,6 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
                 .error(R.drawable.default_background)
                 .into(articleImage);
         Glide.with((getContext())).load(article.getUimg()).into(userImage);
-
-
         Resources resources = mContext.getResources();
         //获取屏幕数据
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
@@ -73,11 +71,10 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
         ViewGroup.LayoutParams lp = articleImage.getLayoutParams();
         lp.width = widthPixels;
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        if(lp.height > 2 * lp.width){
-            articleImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            lp.height = 2*lp.width;
-        }
+
         articleImage.setLayoutParams(lp);
+        articleImage.setMaxHeight(widthPixels * 2);
+
     }
 
     public void refresh(List<Article> list) {

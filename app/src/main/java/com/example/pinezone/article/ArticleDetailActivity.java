@@ -2,17 +2,29 @@ package com.example.pinezone.article;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -58,6 +72,7 @@ public class ArticleDetailActivity extends BasicActivity {
     private Button detailStarButton;
     private Button detailCommentButton;
     private Button detailSubscribeButton;
+    private Button addCommentButton;
 //    private BannerPagerView detailImageView;
 
     private Retrofit retrofit = new Retrofit.Builder()
@@ -159,6 +174,7 @@ public class ArticleDetailActivity extends BasicActivity {
         detailLikeButton = findViewById(R.id.detail_like_button);
         detailStarButton = findViewById(R.id.detail_star_button);
         detailSubscribeButton = findViewById(R.id.detail_subscribe);
+        addCommentButton = findViewById(R.id.detail_add_comment);
 
         detailImageView = findViewById(R.id.detail_image_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -294,6 +310,14 @@ public class ArticleDetailActivity extends BasicActivity {
                 }
             }
         });
+
+        addCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("TAG", "click");
+                showPopupComment();
+            }
+        });
     }
 
     void setAdapter(){
@@ -310,39 +334,99 @@ public class ArticleDetailActivity extends BasicActivity {
         };
         detailImageView.setAdapter(mBaseQuickAdapter);
     }
-}
 
-//
-//class ImageAdapter extends BannerAdapter<Integer,ImageAdapter.ViewHolder>{
-//    private List<Integer> imageList;
-//
-//    public ImageAdapter(List<Integer> imageList){
-//        this.imageList = imageList;
-//    }
-//
-//
-//    static class ViewHolder extends  RecyclerView.ViewHolder{
-//        ImageView image;
-//
-//        public ViewHolder(@NonNull View view) {
-//            super(view);
-//            image = view.findViewById(R.id.img);
-//        }
-//    }
-//
-//    @NonNull
-//    @Override
-//    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.fragment_detail_image_item,parent,false);
-//        ViewHolder holder = new ViewHolder(view);
-//        return holder;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        int imgSource = imageList.get(position);
-//        holder.image.setImageResource(imgSource);
-//    }
-//
-//}
+    //评论部分逻辑
+    private PopupWindow popupWindow;
+    private View popupView = null;
+    private EditText inputComment;
+    private String nInputContentText;
+    private TextView btn_submit;
+    private RelativeLayout rl_input_container;
+    private InputMethodManager mInputManager;
+    @SuppressLint("WrongConstant")
+    private void showPopupComment(){
+        if (popupView == null){
+            //加载评论框的资源文件
+            popupView = LayoutInflater.from(ArticleDetailActivity.this)
+                    .inflate(R.layout.comment_popupwindow, null);
+        }
+        if (popupWindow == null){
+            popupWindow = new PopupWindow(popupView, RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT, false);
+        }
+        inputComment = (EditText) popupView.findViewById(R.id.et_discuss);
+        inputComment.requestFocus();
+        inputComment.setFocusable(true);
+        mInputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        btn_submit = (Button) popupView.findViewById(R.id.btn_confirm);
+        rl_input_container = (RelativeLayout)popupView.findViewById(R.id.rl_input_container);
+        //利用Timer这个Api设置延迟显示软键盘，这里时间为200毫秒
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run()
+            {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.showSoftInput(inputComment, 0);
+            }
+
+        }, 400);
+        //popupWindow的常规设置，设置点击外部事件，背景色
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE){
+                    popupWindow.dismiss();
+                }
+                return false;
+            }
+        });
+        // 设置弹出窗体需要软键盘，放在setSoftInputMode之前
+        popupWindow.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+        // 再设置模式，和Activity的一样，覆盖，调整大小。
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        //设置popupwindow的显示位置，这里应该是显示在底部，即Bottom
+        popupWindow.showAtLocation(popupView, Gravity.BOTTOM, 0, 0);
+
+        popupWindow.update();
+
+        //设置监听
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            // 在dismiss中恢复透明度
+            @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+            public void onDismiss() {
+                mInputManager.hideSoftInputFromWindow(inputComment.getWindowToken(), 0); //强制隐藏键盘
+            }
+        });
+        //外部点击事件
+        rl_input_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getWindowToken()!=null){
+                    mInputManager.hideSoftInputFromWindow(v.getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);//强制隐藏键盘
+                }
+                popupWindow.dismiss();
+            }
+        });
+        //评论框内的发送按钮设置点击事件
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nInputContentText = inputComment.getText().toString().trim();
+                if (nInputContentText == null || "".equals(nInputContentText)) {
+//                        showToastMsgShort("请输入评论内容");
+                    return;
+                }
+                mInputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                popupWindow.dismiss();
+            }
+        });
+    }
+
+}

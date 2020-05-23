@@ -252,7 +252,6 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
                     editor.putString("profile",user.getProfile());
                     editor.putInt("grade",user.getLevel());
                     editor.apply();
-                    editor.apply();
                     user.userShow();
 
                     Call<ResponseBody> callImg = userService.getUserImage(user.getId());;

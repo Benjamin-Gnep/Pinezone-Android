@@ -182,6 +182,9 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                 .build();
         final ArticleService articleService = retrofit.create(ArticleService.class);
 
+        Log.e(TAG, MainActivity.getUid()+"");
+        Log.e(TAG, articleType+"" );
+
         RequestBody uidBody = RequestBody.create
                 (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
         RequestBody cidBody = RequestBody.create
@@ -211,7 +214,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
 
                 if(response.body()==null){
                     publish.setClickable(true);
-                    Toast.makeText(getContext(),"图片过大，请压缩图片或减少图片数量后重试",
+                    Toast.makeText(getContext(),"图片过大或参数错误",
                             Toast.LENGTH_SHORT).show();
                 }else{
                     Log.e(TAG, response.body().toString() );
