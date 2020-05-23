@@ -73,6 +73,7 @@ public class ArticleAdapterPro extends BaseQuickAdapter<Article, BaseViewHolder>
         lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         articleImage.setLayoutParams(lp);
+        articleImage.setMinimumHeight(widthPixels/2);
         articleImage.setMaxHeight(widthPixels * 2);
 
     }

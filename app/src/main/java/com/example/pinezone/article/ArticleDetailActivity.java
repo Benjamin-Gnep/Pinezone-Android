@@ -34,6 +34,9 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.comment.Comment;
+import com.example.pinezone.comment.CommentAdapter;
+import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.ArticleService;
 
 import org.jetbrains.annotations.NotNull;
@@ -73,6 +76,12 @@ public class ArticleDetailActivity extends BasicActivity {
     private Button detailCommentButton;
     private Button detailSubscribeButton;
     private Button addCommentButton;
+    //评论列表逻辑
+    private RecyclerView commentRecyclerView;
+    private CommentAdapter commentAdapter;
+
+    private static int requestPage = 1;
+    private static int currentPage = 1;
 //    private BannerPagerView detailImageView;
 
     private Retrofit retrofit = new Retrofit.Builder()
@@ -175,6 +184,7 @@ public class ArticleDetailActivity extends BasicActivity {
         detailStarButton = findViewById(R.id.detail_star_button);
         detailSubscribeButton = findViewById(R.id.detail_subscribe);
         addCommentButton = findViewById(R.id.detail_add_comment);
+        commentRecyclerView = findViewById(R.id.comment_recycler_view);
 
         detailImageView = findViewById(R.id.detail_image_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -318,6 +328,49 @@ public class ArticleDetailActivity extends BasicActivity {
                 showPopupComment();
             }
         });
+
+        //评论列表部分
+        commentAdapter = new CommentAdapter(ArticleDetailActivity.this,new ArrayList<Comment>());
+        commentAdapter.setAnimationEnable(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(layoutManager);
+        commentRecyclerView.setAdapter(commentAdapter);
+        currentPage = 1;
+        requestPage = 1;
+        getCommentList(requestPage);
+    }
+
+
+    private void getCommentList(final int page){
+        final List<Comment> commentList = new ArrayList<>();
+
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+
+        Call<List<Comment>> call;
+
+        call = articleService.getCommentList(articleId);
+
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                if(response.body() != null && response.body().size() != 0){
+                    Log.e("TAG", response.body().toString() );
+                    commentList.addAll(response.body());
+                    if(page == 1){
+                        commentAdapter.refresh(commentList);
+                    }else{
+                        commentAdapter.loadMore(commentList);
+                    }
+                    commentRecyclerView.requestLayout();
+                } else {
+                    Log.e("TAG", response.toString() );
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+                Log.e("TAG", t.toString() );
+            }
+        });
     }
 
     void setAdapter(){
@@ -334,6 +387,9 @@ public class ArticleDetailActivity extends BasicActivity {
         };
         detailImageView.setAdapter(mBaseQuickAdapter);
     }
+
+
+
 
     //评论部分逻辑
     private PopupWindow popupWindow;
@@ -370,7 +426,7 @@ public class ArticleDetailActivity extends BasicActivity {
                 imm.showSoftInput(inputComment, 0);
             }
 
-        }, 400);
+        }, 500);
         //popupWindow的常规设置，设置点击外部事件，背景色
         popupWindow.setTouchable(true);
         popupWindow.setFocusable(true);
@@ -428,5 +484,4 @@ public class ArticleDetailActivity extends BasicActivity {
             }
         });
     }
-
 }

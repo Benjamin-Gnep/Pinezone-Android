@@ -1,6 +1,7 @@
 package com.example.pinezone.config;
 
 import com.example.pinezone.article.Article;
+import com.example.pinezone.comment.Comment;
 
 import java.util.List;
 import java.util.Map;
@@ -77,4 +78,7 @@ public interface ArticleService {
     Call<List<Article>> getUserStarArticleList(@Query("uid")int uid,
                                                @Query("page")int page,
                                                @Query("pageSize")int pageSize);
+
+    @GET("comment-list")
+    Call<List<Comment>> getCommentList(@Query("aid")int aid);
 }
