@@ -148,17 +148,20 @@
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/detail_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srlEnableRefresh="false"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp"
+        app:srlEnableRefresh="true"
+        app:layout_constraintTop_toBottomOf="@id/article_action_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srlPrimaryColor="@color/middleGray"
         android:paddingBottom="@dimen/line7"
-        app:srlDragRate="0.4">
+        app:srlDragRate="0.3">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/detail_scroll_view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -185,7 +188,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginTop="80dp"
                     android:orientation="horizontal"
                     />
 <!--                <com.example.pinezone.article.WormIndicatorView-->
@@ -244,16 +246,38 @@
                         android:textColor="@color/colorPrimaryLight"
                         android:paddingHorizontal="@dimen/line2"
                         />
+
+                    <TextView
+                        android:id="@+id/comment_num_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line4"
+                        app:layout_constraintTop_toBottomOf="@id/detail_date"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:textSize="@dimen/little"
+                        android:textColor="@color/smssdk_gray"
+                        android:paddingTop="@dimen/line1"
+                        android:paddingLeft="@dimen/line2"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/comment_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     app:layout_constraintTop_toBottomOf="@+id/article_layout"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line4"
+                    app:layout_constraintTop_toBottomOf="@id/comment_recycler_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:background="@color/white"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>

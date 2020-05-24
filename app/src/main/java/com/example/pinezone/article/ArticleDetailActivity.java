@@ -3,12 +3,15 @@ package com.example.pinezone.article;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -38,6 +41,9 @@ import com.example.pinezone.comment.Comment;
 import com.example.pinezone.comment.CommentAdapter;
 import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.ArticleService;
+import com.example.pinezone.ui.publish.PublishActivityCollector;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,6 +70,7 @@ public class ArticleDetailActivity extends BasicActivity {
 
     private int articleId;
     private int userId;
+    private int authorId;
     private ImageView detailAuthorImage;
     private TextView detailAuthorName;
     private TextView detailAuthorDescribe;
@@ -79,6 +86,9 @@ public class ArticleDetailActivity extends BasicActivity {
     //评论列表逻辑
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
+    private TextView commentNum;
+    private NestedScrollView scrollView;
+    private RefreshLayout refreshLayout;
 
     private static int requestPage = 1;
     private static int currentPage = 1;
@@ -129,6 +139,7 @@ public class ArticleDetailActivity extends BasicActivity {
                     @Override
                     public void run() {
                         try{
+                            authorId = article.getUid();
                             detailAuthorName.setText(article.getUsername());
                             detailAuthorDescribe.setText(article.getDescribe());
                             detailTitle.setText(article.getTitle());
@@ -143,6 +154,7 @@ public class ArticleDetailActivity extends BasicActivity {
                             detailLikeButton.setText(String.valueOf(article.getLikenum()));
                             detailStarButton.setText(String.valueOf(article.getStarnum()));
                             detailCommentButton.setText(String.valueOf(article.getCommentnum()));
+                            commentNum.setText("共有" + article.getCommentnum() + "条评论");
                             if(article.getIslike() == 1){
                                 detailLikeButton.setSelected(true);
                             }
@@ -185,6 +197,9 @@ public class ArticleDetailActivity extends BasicActivity {
         detailSubscribeButton = findViewById(R.id.detail_subscribe);
         addCommentButton = findViewById(R.id.detail_add_comment);
         commentRecyclerView = findViewById(R.id.comment_recycler_view);
+        scrollView = findViewById(R.id.detail_scroll_view);
+        refreshLayout = findViewById(R.id.detail_refresh);
+        commentNum = findViewById(R.id.comment_num_text);
 
         detailImageView = findViewById(R.id.detail_image_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -330,7 +345,10 @@ public class ArticleDetailActivity extends BasicActivity {
         });
 
         //评论列表部分
-        commentAdapter = new CommentAdapter(ArticleDetailActivity.this,new ArrayList<Comment>());
+        boolean isAuthor = false;
+        if(authorId == MainActivity.getUid())isAuthor = true;
+        commentAdapter = new CommentAdapter(ArticleDetailActivity.this,
+                new ArrayList<Comment>(),isAuthor);
         commentAdapter.setAnimationEnable(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         commentRecyclerView.setLayoutManager(layoutManager);
@@ -338,6 +356,32 @@ public class ArticleDetailActivity extends BasicActivity {
         currentPage = 1;
         requestPage = 1;
         getCommentList(requestPage);
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refreshlayout.finishRefresh(1000/*,false*/);//传入false表示刷新失败
+                loadArticle();
+                requestPage = 1;
+                getCommentList(requestPage);
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    //判断scrollview是否到达最底端，然后加载下一页
+                    View onlyChild = scrollView.getChildAt(0);
+                    if (onlyChild.getHeight() <= scrollY + scrollView.getHeight()) {   // 如果满足就是到底部了
+                        if(requestPage == currentPage){
+                            requestPage++;
+                            getCommentList(requestPage);
+                        }
+                    }
+                }
+            });
+        }
     }
 
 
@@ -348,7 +392,7 @@ public class ArticleDetailActivity extends BasicActivity {
 
         Call<List<Comment>> call;
 
-        call = articleService.getCommentList(articleId);
+        call = articleService.getCommentList(articleId,page,10);
 
         call.enqueue(new Callback<List<Comment>>() {
             @Override
@@ -358,8 +402,10 @@ public class ArticleDetailActivity extends BasicActivity {
                     commentList.addAll(response.body());
                     if(page == 1){
                         commentAdapter.refresh(commentList);
+                        currentPage = 1;
                     }else{
                         commentAdapter.loadMore(commentList);
+                        currentPage++;
                     }
                     commentRecyclerView.requestLayout();
                 } else {
@@ -477,10 +523,48 @@ public class ArticleDetailActivity extends BasicActivity {
                 nInputContentText = inputComment.getText().toString().trim();
                 if (nInputContentText == null || "".equals(nInputContentText)) {
 //                        showToastMsgShort("请输入评论内容");
+                    try{
+                        Toast.makeText(ArticleDetailActivity.this
+                                ,"请输入评论内容",Toast.LENGTH_SHORT).show();
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                     return;
                 }
+                publishComment(nInputContentText);
                 mInputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 popupWindow.dismiss();
+            }
+
+            private void publishComment(String nInputContentText) {
+                final ArticleService articleService = retrofit.create(ArticleService.class);
+
+                RequestBody uidBody = RequestBody.create
+                        (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
+                RequestBody aidBody = RequestBody.create
+                        (MediaType.parse("multipart/form-data"),String.valueOf(articleId));
+                RequestBody contentBody = RequestBody.create
+                        (MediaType.parse("multipart/form-data"),nInputContentText);
+                Call<ResponseBody> call = articleService.publishComment(uidBody,aidBody,contentBody);
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        if(response.body()==null){
+                            Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                    Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(ArticleDetailActivity.this,"评论成功",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

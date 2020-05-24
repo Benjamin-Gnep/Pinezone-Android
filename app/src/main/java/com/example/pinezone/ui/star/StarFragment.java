@@ -106,9 +106,12 @@ public class StarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_article_list, container, false);
-        ConstraintLayout actionBarView = view.findViewById(R.id.action_bar);
-        TextView textView = (TextView) actionBarView.findViewById(R.id.action_bar_title);
+        view = inflater.inflate(R.layout.fragment_star, container, false);
+        ConstraintLayout actionBarView = view.findViewById(R.id.nobutton_action_bar);
+        if(actionBarView == null){
+            Log.e(TAG, "no exist");
+        }
+        TextView textView = (TextView) actionBarView.findViewById(R.id.nobutton_bar_title);
 
         textView.setText("收藏");
 

@@ -5,7 +5,9 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 
@@ -27,11 +30,13 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
 
     private Context mContext;
     private List<Comment> commentList;
+    private boolean couldDelete;
 
-    public CommentAdapter(Context context, List<Comment> data) {
+    public CommentAdapter(Context context, List<Comment> data, boolean isAuthor) {
         super(R.layout.fragment_comment_item, data);
         commentList = data;
         mContext = context;
+        couldDelete = isAuthor;
     }
 
     @Override
@@ -41,7 +46,11 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
                 .setText(R.id.comment_date,comment.getDatetime());
 
         ImageView userImage = helper.findView(R.id.comment_author_image);
-
+        Button commentDelete = helper.findView(R.id.comment_delete);
+        if(couldDelete){
+            commentDelete.setVisibility(View.VISIBLE);
+        }
+        Glide.with((getContext())).load(comment.getUimg()).into(userImage);
     }
 
     public void refresh(List<Comment> list) {

@@ -58,6 +58,7 @@
         />
 
     <Button
+        android:id="@+id/comment_delete"
         android:layout_width="@dimen/line7"
         android:layout_height="@dimen/line3"
         app:layout_constraintRight_toRightOf="parent"

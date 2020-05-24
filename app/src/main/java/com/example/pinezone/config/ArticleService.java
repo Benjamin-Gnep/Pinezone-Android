@@ -80,5 +80,13 @@ public interface ArticleService {
                                                @Query("pageSize")int pageSize);
 
     @GET("comment-list")
-    Call<List<Comment>> getCommentList(@Query("aid")int aid);
+    Call<List<Comment>> getCommentList(@Query("aid")int aid,
+                                       @Query("page")int page,
+                                       @Query("num")int pageSize);
+
+    @Multipart
+    @POST("comment")
+    Call<ResponseBody> publishComment(@Part("uid") RequestBody uid,
+                                      @Part("aid") RequestBody aid,
+                                      @Part("content") RequestBody content);
 }

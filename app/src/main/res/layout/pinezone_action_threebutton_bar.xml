@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="96dp"
-    android:id="@+id/action_bar"
+    android:id="@+id/action_threebutton_bar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/line3">
 
