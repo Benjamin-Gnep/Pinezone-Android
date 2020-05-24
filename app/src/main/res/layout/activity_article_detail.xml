@@ -88,7 +88,7 @@
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="240dp"
+            android:layout_width="200dp"
             android:layout_height="@dimen/line5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -143,6 +143,39 @@
             android:textColor="@color/subColor"
             android:background="@drawable/button_line_shape_light"
             android:stateListAnimator="@null"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:id="@+id/detail_delete"
+            android:layout_width="64dp"
+            android:layout_height="24dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/line3"
+            android:text="删除"
+            android:layout_marginRight="@dimen/line2"
+            android:textColor="@color/warnColor"
+            android:background="@drawable/button_line_shape_warning"
+            android:stateListAnimator="@null"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:id="@+id/detail_update"
+            android:layout_width="64dp"
+            android:layout_height="24dp"
+            app:layout_constraintRight_toLeftOf="@id/detail_delete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/line3"
+            android:text="修改"
+            android:layout_marginRight="@dimen/line1"
+            android:textColor="@color/subColor"
+            android:background="@drawable/button_line_shape_light"
+            android:stateListAnimator="@null"
+            android:visibility="invisible"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

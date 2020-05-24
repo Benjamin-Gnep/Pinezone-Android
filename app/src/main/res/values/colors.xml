@@ -4,6 +4,7 @@
     <color name="colorPrimaryLight">#BCAAA4</color>
     <color name="colorPrimaryDark">#5D4037</color>
     <color name="colorAccent">#DCB879</color>
+    <color name="warnColor">#FF7043</color>
     <color name="subColor">#DCB879</color>
     <color name="subSubColor">#E5CA99</color>
     <color name="white">#FFFFFF</color>

@@ -32,18 +32,18 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
     private List<Comment> commentList;
     private boolean couldDelete;
 
-    public CommentAdapter(Context context, List<Comment> data, boolean isAuthor) {
+    public CommentAdapter(Context context, List<Comment> data) {
         super(R.layout.fragment_comment_item, data);
         commentList = data;
         mContext = context;
-        couldDelete = isAuthor;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, Comment comment) {
-        helper.setText(R.id.comment_content,comment.getContent())
-                .setText(R.id.comment_author_name,comment.getUsername())
-                .setText(R.id.comment_date,comment.getDatetime());
+        helper.setText(R.id.comment_id,String.valueOf(comment.getComid()))
+                .setText(R.id.comment_content,comment.getContent())
+            .setText(R.id.comment_author_name,comment.getUsername())
+            .setText(R.id.comment_date,comment.getDatetime());
 
         ImageView userImage = helper.findView(R.id.comment_author_image);
         Button commentDelete = helper.findView(R.id.comment_delete);
@@ -67,5 +67,9 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
         int insertSize = list.size();
         commentList.addAll(list);
         notifyItemRangeInserted(currentSize,insertSize);
+    }
+
+    public void couldDelete(boolean isAuthor) {
+        couldDelete = isAuthor;
     }
 }

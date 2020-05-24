@@ -36,7 +36,7 @@ public interface ArticleService {
                                            @Query("pageSize")int pageSize);
 
     @GET("article")
-    Call<Article> getArticle(@Query("aid")int aid,
+    Call<Article> getArticle(@Query("aid")Long aid,
                              @Query("uid")int uid);
 
     @Multipart
@@ -80,7 +80,7 @@ public interface ArticleService {
                                                @Query("pageSize")int pageSize);
 
     @GET("comment-list")
-    Call<List<Comment>> getCommentList(@Query("aid")int aid,
+    Call<List<Comment>> getCommentList(@Query("aid")Long aid,
                                        @Query("page")int page,
                                        @Query("num")int pageSize);
 
@@ -89,4 +89,14 @@ public interface ArticleService {
     Call<ResponseBody> publishComment(@Part("uid") RequestBody uid,
                                       @Part("aid") RequestBody aid,
                                       @Part("content") RequestBody content);
+
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @HTTP(method = "DELETE", path = "comment", hasBody = true)
+    @FormUrlEncoded
+    Call<ResponseBody> deleteComment(@Field("comid") Long comid);
+
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @HTTP(method = "DELETE", path = "article", hasBody = true)
+    @FormUrlEncoded
+    Call<ResponseBody> deleteArticle(@Field("aid") Long aid);
 }

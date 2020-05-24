@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
@@ -53,8 +55,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,7 +72,7 @@ public class ArticleDetailActivity extends BasicActivity {
     private List<String> detailImageGroup;
     private BaseQuickAdapter<String, BaseViewHolder> mBaseQuickAdapter;
 
-    private int articleId;
+    private Long articleId;
     private int userId;
     private int authorId;
     private ImageView detailAuthorImage;
@@ -82,6 +86,8 @@ public class ArticleDetailActivity extends BasicActivity {
     private Button detailStarButton;
     private Button detailCommentButton;
     private Button detailSubscribeButton;
+    private Button detailDeleteButton;
+    private Button detailUpdateButton;
     private Button addCommentButton;
     //评论列表逻辑
     private RecyclerView commentRecyclerView;
@@ -99,7 +105,7 @@ public class ArticleDetailActivity extends BasicActivity {
             .addConverterFactory(GsonConverterFactory.create()) //添加Gson
             .build();
 
-    public static void StartActivity(Context context, int articleId, int userId){
+    public static void StartActivity(Context context, Long articleId, int userId){
         Intent intent = new Intent(context,ArticleDetailActivity.class);
         intent.putExtra(ARTICLE_ID,articleId);
         intent.putExtra(USER_ID,userId);
@@ -118,13 +124,14 @@ public class ArticleDetailActivity extends BasicActivity {
         setContentView(R.layout.activity_article_detail);
         Intent intent = getIntent();
         if(intent != null){
-            articleId = intent.getIntExtra(ARTICLE_ID,0);
+            articleId = intent.getLongExtra(ARTICLE_ID,0);
             userId = intent.getIntExtra(USER_ID,0);
         }else {
             Toast.makeText(ArticleDetailActivity.this,"获取文章错误"
                     ,Toast.LENGTH_SHORT).show();
         }
         initView();
+
     }
 
     private void loadArticle() {
@@ -162,8 +169,19 @@ public class ArticleDetailActivity extends BasicActivity {
                                 detailStarButton.setSelected(true);
                             }
                             if(article.getUid() == MainActivity.getUid()){
-                                detailSubscribeButton.setText("修改");
+                                detailSubscribeButton.setVisibility(View.INVISIBLE);
+                                detailDeleteButton.setVisibility(View.VISIBLE);
+                                detailUpdateButton.setVisibility(View.VISIBLE);
+                            }else {
+                                detailSubscribeButton.setVisibility(View.VISIBLE);
+                                detailDeleteButton.setVisibility(View.INVISIBLE);
+                                detailUpdateButton.setVisibility(View.INVISIBLE);
                             }
+                            boolean isAuthor = false;
+                            if(authorId == MainActivity.getUid()){
+                                isAuthor = true;
+                            }
+                            commentAdapter.couldDelete(isAuthor);
                             setAdapter();
                         }catch (Exception e){
                             e.printStackTrace();
@@ -194,6 +212,8 @@ public class ArticleDetailActivity extends BasicActivity {
         detailCommentButton = findViewById(R.id.detail_comment_button);
         detailLikeButton = findViewById(R.id.detail_like_button);
         detailStarButton = findViewById(R.id.detail_star_button);
+        detailUpdateButton = findViewById(R.id.detail_update);
+        detailDeleteButton = findViewById(R.id.detail_delete);
         detailSubscribeButton = findViewById(R.id.detail_subscribe);
         addCommentButton = findViewById(R.id.detail_add_comment);
         commentRecyclerView = findViewById(R.id.comment_recycler_view);
@@ -207,6 +227,49 @@ public class ArticleDetailActivity extends BasicActivity {
         detailImageView.setLayoutManager(linearLayoutManager);
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(detailImageView);
+
+        //删除按钮逻辑
+        detailDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(ArticleDetailActivity.this).
+                        setMessage("确定删除这篇文章吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final ArticleService articleService =
+                                        retrofit.create(ArticleService.class);
+                                Call<ResponseBody> call;
+                                call = articleService.deleteArticle(articleId);
+                                call.enqueue(new Callback<ResponseBody>(){
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        if(response.body() == null){
+                                            Log.e("TAG", response.toString() );
+                                            Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Toast.makeText(ArticleDetailActivity.this,"删除成功",
+                                                    Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
+            }
+        });
 
         //点赞图标逻辑
         detailLikeButton.setOnClickListener(new View.OnClickListener() {
@@ -345,11 +408,62 @@ public class ArticleDetailActivity extends BasicActivity {
         });
 
         //评论列表部分
-        boolean isAuthor = false;
-        if(authorId == MainActivity.getUid())isAuthor = true;
         commentAdapter = new CommentAdapter(ArticleDetailActivity.this,
-                new ArrayList<Comment>(),isAuthor);
+                new ArrayList<Comment>());
         commentAdapter.setAnimationEnable(true);
+        commentAdapter.addChildClickViewIds(R.id.comment_delete);
+        commentAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(@NonNull BaseQuickAdapter adapter,
+                                         @NonNull View view, int position) {
+                switch (view.getId()){
+                    case R.id.comment_delete:
+                        ConstraintLayout layout = (ConstraintLayout) view.getParent();
+                        TextView commentId = layout.findViewById(R.id.comment_id);
+                        new AlertDialog.Builder(ArticleDetailActivity.this).
+                                setMessage("确定删除这条评论吗？")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        final ArticleService articleService =
+                                                retrofit.create(ArticleService.class);
+                                        Call<ResponseBody> call;
+                                        call = articleService.deleteComment(
+                                                Long.parseLong(commentId.getText().toString()));
+                                        call.enqueue(new Callback<ResponseBody>(){
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if(response.body() == null){
+                                                    Log.e("TAG", response.toString() );
+                                                    Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                                            Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(ArticleDetailActivity.this,"删除成功",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    currentPage = 1;
+                                                    requestPage = 1;
+                                                    getCommentList(requestPage);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                }).show();
+                        break;
+                }
+            }
+        });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         commentRecyclerView.setLayoutManager(layoutManager);
         commentRecyclerView.setAdapter(commentAdapter);
@@ -557,6 +671,9 @@ public class ArticleDetailActivity extends BasicActivity {
                         }else{
                             Toast.makeText(ArticleDetailActivity.this,"评论成功",
                                     Toast.LENGTH_SHORT).show();
+                            currentPage = 1;
+                            requestPage = 1;
+                            getCommentList(requestPage);
                         }
                     }
                     @Override

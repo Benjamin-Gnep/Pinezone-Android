@@ -122,7 +122,7 @@ public class MineFragment extends Fragment {
                     case R.id.article_title:
                         ConstraintLayout layout = (ConstraintLayout) view.getParent();
                         TextView textView = layout.findViewById(R.id.article_id);
-                        int aid = Integer.parseInt(textView.getText().toString());
+                        Long aid = Long.parseLong(textView.getText().toString());
                         int uid = MainActivity.getUid();
                         ArticleDetailActivity.StartActivity(getActivity(),aid,uid);
                         break;
