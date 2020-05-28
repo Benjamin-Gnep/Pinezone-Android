@@ -290,5 +290,13 @@ public class MineFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        editInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MineInfo.class);
+                startActivity(intent);
+            }
+        });
     }
 }
