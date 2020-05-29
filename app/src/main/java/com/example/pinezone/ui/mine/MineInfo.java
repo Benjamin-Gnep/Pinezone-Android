@@ -1,5 +1,6 @@
 package com.example.pinezone.ui.mine;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -39,7 +40,11 @@ import com.luck.picture.lib.style.PictureCropParameterStyle;
 import com.luck.picture.lib.style.PictureParameterStyle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -211,8 +216,68 @@ public class MineInfo extends BasicActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editUpload();
-//                finish();
+                if(imgPath != null){
+                    uploadImg();
+                    editUpload();
+                }else{
+                    editUpload();
+                }
+                finish();
+            }
+        });
+    }
+
+    private void uploadImg() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .build();
+        final UserService userService = retrofit.create(UserService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        File file = new File(imgPath);
+        Log.e(TAG, file.getPath());
+        RequestBody fileRequestBody =
+                RequestBody.create(MediaType.parse("multipart/form-data"),file);
+        MultipartBody.Part filePart =
+                MultipartBody.Part.createFormData("img", file.getName(), fileRequestBody);
+        Call<ResponseBody> call = userService.uploadUserImg(uidBody,filePart);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.body()==null){
+                    Toast.makeText(getContext(),"参数错误",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Call<ResponseBody> callImg = userService.getUserImage(MainActivity.getUid());;
+                    callImg.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ResponseBody> call,
+                                               @NonNull Response<ResponseBody> response) {
+                            try {
+                                assert response.body() != null;
+                                String s = response.body().string();
+                                JSONObject image = new JSONObject(s);
+                                String path = image.getString("path");
+                                editor.putString("path",path);
+                                Log.e(TAG, path);
+                                editor.apply();
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getContext(),"网络错误",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -232,14 +297,6 @@ public class MineInfo extends BasicActivity {
                 .client(okClient)
                 .build();
         final UserService userService = retrofit.create(UserService.class);
-
-//        File file = new File(mAdapter.getData().get(i).getCompressPath());
-//        Log.e(TAG, file.getPath());
-//        RequestBody fileRequestBody =
-//                RequestBody.create(MediaType.parse("multipart/form-data"),file);
-//        MultipartBody.Part filePart =
-//                MultipartBody.Part.createFormData("imgs", file.getName(), fileRequestBody);
-
         int sex;
         if(userSex.getContentEdt().getText().toString().equals("未知")){
             sex = 0;
@@ -266,22 +323,24 @@ public class MineInfo extends BasicActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if(response.body()==null){
-                }else{
-                    String s = response.body().toString();
-                    Gson gson = new Gson();
-
-                    User user = gson.fromJson(s,User.class);
-
                     Toast.makeText(getContext(),"参数错误",
                             Toast.LENGTH_SHORT).show();
-                    editor.putString("name",user.getName());
-                    editor.putInt("sex",user.getSex());
-                    editor.putString("profile",user.getProfile());
-                    editor.putInt("grade",user.getLevel());
-                    editor.apply();
-                    finish();
+                }else{
+                    try {
+                        Toast.makeText(getContext(),"修改成功",
+                            Toast.LENGTH_SHORT).show();
+                        String s = response.body().string();
+                        Gson gson = new Gson();
+                        User user = gson.fromJson(s,User.class);
+                        editor.putString("name",user.getName());
+                        editor.putInt("sex",user.getSex());
+                        editor.putString("profile",user.getProfile());
+                        editor.putInt("grade",user.getLevel());
+                        editor.apply();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-
             }
 
             @Override

@@ -35,6 +35,7 @@ public interface UserService {
                                   @Part("profile") RequestBody profile,
                                   @Part("sex") RequestBody sex);
 
+    @Multipart
     @POST("uploadUserImg")
     Call<ResponseBody> uploadUserImg(@Part("uid") RequestBody uid,
                                      @Part MultipartBody.Part img);
