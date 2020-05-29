@@ -33,6 +33,20 @@ tools:context=".ui.mine.MineInfo">
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <Button
+                android:id="@+id/save"
+                android:layout_width="72dp"
+                android:layout_height="@dimen/line3"
+                android:background="@drawable/button_circle_shape"
+                android:text="保  存"
+                android:textSize="@dimen/little"
+                android:padding="0dp"
+                android:textColor="@color/white"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/line5"
+                android:layout_marginRight="@dimen/line2"/>
+
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/user_image"
                 android:layout_width="72dp"

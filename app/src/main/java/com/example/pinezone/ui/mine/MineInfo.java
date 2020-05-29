@@ -2,12 +2,9 @@ package com.example.pinezone.ui.mine;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceFragmentCompat;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,21 +16,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.pinezone.BasicActivity;
+import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.GlideEngine;
-import com.example.pinezone.config.GridImageAdapter;
 import com.example.pinezone.config.ItemGroup;
-import com.example.pinezone.ui.publish.PublishArticle;
-import com.example.pinezone.ui.setting.SettingsActivity;
+import com.example.pinezone.config.UserService;
+import com.example.pinezone.user.User;
+import com.google.gson.Gson;
 import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
@@ -41,16 +39,30 @@ import com.luck.picture.lib.style.PictureCropParameterStyle;
 import com.luck.picture.lib.style.PictureParameterStyle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.lang.ref.WeakReference;
+import java.io.File;
 import java.util.List;
 
-import static com.mob.MobSDK.getContext;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 
 public class MineInfo extends BasicActivity {
     private static final String TAG = "MineInfo";
+
+    private String imgPath;
+
     private SharedPreferences pref;
     private Context context;
     private ImageButton button;
+    private Button save;
     private SharedPreferences.Editor editor;
     private ItemGroup userName;
     private ItemGroup userProfile;
@@ -104,6 +116,7 @@ public class MineInfo extends BasicActivity {
         userCity = findViewById(R.id.select_city_ig);
         userImage = findViewById(R.id.user_image);
         button = findViewById(R.id.changeImage);
+        save = findViewById(R.id.save);
 //
 //        editor.putInt("id",user.getId());
 //        editor.putString("name",user.getName());
@@ -163,6 +176,12 @@ public class MineInfo extends BasicActivity {
                 showGradeDialog();
             }
         });
+        userCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"暂不支持地区更换",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +205,90 @@ public class MineInfo extends BasicActivity {
                         .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                         .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
                         .forResult(new MyResultCallback());
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUpload();
+//                finish();
+            }
+        });
+    }
+
+    private void editUpload() {
+        //HttpLoggingInterceptor打印流程
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override public void log(String message) {
+                Log.d("MyTAG", "OkHttp: " + message);
+            }
+        });
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient okClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .client(okClient)
+                .build();
+        final UserService userService = retrofit.create(UserService.class);
+
+//        File file = new File(mAdapter.getData().get(i).getCompressPath());
+//        Log.e(TAG, file.getPath());
+//        RequestBody fileRequestBody =
+//                RequestBody.create(MediaType.parse("multipart/form-data"),file);
+//        MultipartBody.Part filePart =
+//                MultipartBody.Part.createFormData("imgs", file.getName(), fileRequestBody);
+
+        int sex;
+        if(userSex.getContentEdt().getText().toString().equals("未知")){
+            sex = 0;
+        }else if(userSex.getContentEdt().getText().toString().equals("男")){
+            sex = 1;
+        }else {
+            sex = 2;
+        }
+        RequestBody nameBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(userName.getContentEdt().getText().toString()));
+        RequestBody profileBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(userProfile.getContentEdt().getText().toString()));
+        RequestBody sexBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(sex));
+
+        Call<ResponseBody> call = userService.editUpload(MainActivity.getUid(),
+                nameBody,profileBody,sexBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if(response.body()==null){
+                }else{
+                    String s = response.body().toString();
+                    Gson gson = new Gson();
+
+                    User user = gson.fromJson(s,User.class);
+
+                    Toast.makeText(getContext(),"参数错误",
+                            Toast.LENGTH_SHORT).show();
+                    editor.putString("name",user.getName());
+                    editor.putInt("sex",user.getSex());
+                    editor.putString("profile",user.getProfile());
+                    editor.putInt("grade",user.getLevel());
+                    editor.apply();
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getContext(),"网络错误",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -360,7 +463,8 @@ public class MineInfo extends BasicActivity {
             // 4.media.getOriginalPath()); media.isOriginal());为true时此字段才有值
             // 5.media.getAndroidQToPath();Android Q版本特有返回的字段，但如果开启了压缩或裁剪还是取裁剪或压缩路径；注意：.isAndroidQTransform 为false 此字段将返回空
             // 如果同时开启裁剪和压缩，则取压缩路径为准因为是先裁剪后压缩
-            Glide.with(getContext()).load(result.get(0).getCompressPath()).into(userImage);
+            imgPath = result.get(0).getCompressPath();
+            Glide.with(getContext()).load(imgPath).into(userImage);
         }
 
         @Override
