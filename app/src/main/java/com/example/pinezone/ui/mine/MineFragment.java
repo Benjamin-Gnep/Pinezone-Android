@@ -248,6 +248,8 @@ public class MineFragment extends Fragment {
                 }
                 if(s.equals("女")){
                     userGradeSex.setSelected(false);
+                }else {
+                    userGradeSex.setSelected(true);
                 }
             }
         });

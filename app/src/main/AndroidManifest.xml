@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/act_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.mine.MineInfo"></activity>
+        <activity android:name=".ui.mine.EditTextActivity"></activity>
+        <activity android:name=".ui.mine.MineInfo" />
         <activity
             android:name=".ui.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />

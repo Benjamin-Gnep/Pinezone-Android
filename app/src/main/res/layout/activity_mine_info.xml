@@ -8,7 +8,7 @@ android:layout_height="match_parent"
 android:background="@color/white"
 tools:context=".ui.mine.MineInfo">
 
-<ImageView
+    <ImageView
     android:layout_width="match_parent"
     android:layout_height="220dp"
     app:layout_constraintTop_toTopOf="parent"
@@ -17,47 +17,92 @@ tools:context=".ui.mine.MineInfo">
     android:src="@drawable/mine_background"
     android:scaleType="centerCrop"
     />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/user_image"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="56dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/user"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_corner_radius="36dp" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_style"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/user_image"
+                android:layout_marginTop="32dp"
+                android:paddingTop="@dimen/line2"
+                android:paddingBottom="@dimen/line6"
+                android:orientation="vertical">
+                <com.example.pinezone.config.ItemGroup
+                    android:id="@+id/name_ig"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/card_style"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="144dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="wrap_content"
+                    app:edt_hint_content="输入昵称成为独一无二的自己"
+                    app:jt_visible="false"
+                    app:paddingLeft="15dp"
+                    app:title="昵称" />
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/user_image"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:adjustViewBounds="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="48dp"
-                    app:riv_corner_radius="36dp"/>
+                <com.example.pinezone.config.ItemGroup
+                    android:id="@+id/profile_ig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:edt_hint_content="输入简介让别人认识你吧"
+                    app:jt_visible="false"
+                    app:paddingLeft="15dp"
+                    app:title="简介" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.example.pinezone.config.ItemGroup
+                    android:id="@+id/select_sex_ig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:edt_hint_content="未知"
+                    app:isEditable="false"
+                    app:paddingLeft="15dp"
+                    app:title="性别" />
+
+                <com.example.pinezone.config.ItemGroup
+                    android:id="@+id/grade_ig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:edt_hint_content="未知"
+                    app:isEditable="false"
+                    app:paddingLeft="15dp"
+                    app:title="年级" />
+
+                <com.example.pinezone.config.ItemGroup
+                    android:id="@+id/select_city_ig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:edt_hint_content="未知"
+                    app:isEditable="false"
+                    app:paddingLeft="15dp"
+                    app:title="所在城市" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

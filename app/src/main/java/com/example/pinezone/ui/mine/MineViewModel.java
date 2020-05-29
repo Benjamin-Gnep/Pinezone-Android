@@ -70,7 +70,9 @@ public class MineViewModel extends AndroidViewModel {
         userId.setValue(pref.getInt("id",0));
         userName.setValue(pref.getString("name",""));
         userSign.setValue(pref.getString("profile",""));
-        if(pref.getInt("sex",1) == 1){
+        if(pref.getInt("sex",1) == 0){
+            userSex.setValue("未知");
+        } else if((pref.getInt("sex",1) == 1)){
             userSex.setValue("男");
         } else {
             userSex.setValue("女");
@@ -81,7 +83,6 @@ public class MineViewModel extends AndroidViewModel {
         userFans.setValue("145");
         userArticle.setValue("34");
         userImage.setValue(pref.getString("path",""));
-
     }
 
 
