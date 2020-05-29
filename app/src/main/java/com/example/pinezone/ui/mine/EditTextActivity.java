@@ -38,17 +38,19 @@ public class EditTextActivity extends BasicActivity {
         okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
                 if(intent.getStringExtra("title").equals("修改昵称")
-                        && editText.getText().length() > 12){
+                        && editText.getText().length() > 8){
                     Toast.makeText(EditTextActivity.this,
                             "昵称过长",Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 if(intent.getStringExtra("title").equals("修改简介")
-                        && editText.getText().length() > 40){
+                        && editText.getText().length() > 20){
                     Toast.makeText(EditTextActivity.this,
                             "简介过长",Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                Intent intent = new Intent();
                 intent.putExtra("text",editText.getText().toString());
                 setResult(RESULT_OK,intent);
                 finish();
