@@ -7,17 +7,21 @@
     tools:context=".ui.notifications.NotificationsFragment"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <include layout="@layout/pinezone_nobutton_action_bar"
+        android:id="@+id/action_bar"
+        android:layout_marginTop="@dimen/line2"
+        android:layout_height="80dp"
+        android:layout_width="match_parent" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="20sp"
-        android:gravity="center"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/action_bar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="@dimen/line2">
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
