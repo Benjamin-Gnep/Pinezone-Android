@@ -23,5 +23,36 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="@dimen/line2">
 
+        <com.example.pinezone.config.ItemGroupMessage
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:message_title="我的关注列表"
+            app:message_title_color="@color/colorPrimary"
+            app:message_icon_id="@drawable/ic_followlist"
+            app:message_visible="false"/>
+
+        <com.example.pinezone.config.ItemGroupMessage
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:message_title="新的关注"
+            app:message_title_color="@color/colorPrimary"
+            app:message_icon_id="@drawable/ic_newfollow"
+            app:message_visible="false"/>
+
+        <com.example.pinezone.config.ItemGroupMessage
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:message_title="收到的赞"
+            app:message_title_color="@color/colorPrimary"
+            app:message_icon_id="@drawable/ic_receivelike"
+            app:message_visible="false"/>
+
+        <com.example.pinezone.config.ItemGroupMessage
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:message_title="收到的评论"
+            app:message_title_color="@color/colorPrimary"
+            app:message_icon_id="@drawable/ic_receivecomment"
+            app:message_visible="false"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

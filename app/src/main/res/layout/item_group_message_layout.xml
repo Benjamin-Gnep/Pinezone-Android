@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--个人信息界面（编辑资料界面）的每个item-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_group_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/line6"
+        android:layout_height="56dp"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -49,9 +48,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/white"
             android:text="12"
-            android:textSize="@dimen/little"
+            android:textSize="@dimen/annotation"
             android:gravity="center"
-            android:padding="0dp"/>
+            android:padding="0dp"
+            android:layout_marginRight="@dimen/line2"/>
 
         <!--点击跳转或者弹出选择框-->
         <ImageView

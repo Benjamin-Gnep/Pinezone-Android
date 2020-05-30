@@ -32,4 +32,28 @@
         <attr name="line_color" format="color" />
         <attr name="line_height" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="ItemGroupMessage">
+        <!--标题的文字-->
+        <attr name="message_title" format="string" />
+        <!--标题的字体大小-->
+        <attr name="message_title_size" format="dimension" />
+        <!--标题的字体颜色-->
+        <attr name="message_title_color" format="color" />
+        <!--向的右箭头图标是否可见-->
+        <attr name="message_jt_visible" format="boolean"/>
+        <!--item布局的内边距-->
+        <attr name="message_paddingLeft" format="dimension"/>
+        <attr name="message_paddingRight" format="dimension"/>
+        <attr name="message_paddingTop" format="dimension"/>
+        <attr name="message_paddingBottom" format="dimension"/>
+
+        <attr name="message_drawable_left" format="reference" />
+        <attr name="message_drawable_right" format="reference" />
+        <attr name="message_line_color" format="color" />
+        <attr name="message_line_height" format="integer" />
+        <attr name="message_icon_id" format="integer" />
+        <attr name="message_count" format="integer" />
+        <attr name="message_visible" format="boolean"/>
+    </declare-styleable>
 </resources>
