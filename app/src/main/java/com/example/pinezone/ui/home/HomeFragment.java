@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,11 @@ import com.example.pinezone.R;
 import com.example.pinezone.article.ArticleListFragment;
 import com.example.pinezone.config.ArticleConstant;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private long exitTime = 0;
 
@@ -42,6 +49,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button gymButton;
     private TextView homeText;
     private TextView selectionText;
+    private ImageView homePet;
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
 
@@ -74,8 +82,75 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         initView(root);
+        setPet();
         return root;
     }
+
+    private void setPet() {
+        Date time = new Date(System.currentTimeMillis());
+        Log.e("TAG", dateToString(time) );
+        if(pref.getString("date",null) == null){
+            editor.putString("date",dateToString(time));
+            editor.putInt("mode",0);
+            editor.apply();
+        }
+        String timeIndex;
+        timeIndex = pref.getString("date",null);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date timeStore = format.parse(timeIndex);
+            Log.e("TAG", dateToString(timeStore) );
+            if(time.after(timeStore) || timeStore.equals(time)){
+                Random rand = new Random();
+                //18000000 7200000
+                int i = rand.nextInt(10000);//五小时
+                while(i < 5000){//一小时
+                    i = rand.nextInt(10000);
+                }
+                Date newDate = new Date(System.currentTimeMillis() + i);
+                chooseMode(rand.nextInt(4));
+                editor.putString("date",dateToString(newDate));
+                editor.apply();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void chooseMode(int nextInt) {
+        Log.e("TAG", "开始重置" );
+        switch (nextInt){
+            case 0:
+                editor.putInt("mode",0);
+                homePet.setImageResource(R.drawable.home_pet_leave);
+                homeText.setText("松鼠好像还没回家，再等等吧");
+                break;
+            case 1:
+                editor.putInt("mode",1);
+                homePet.setImageResource(R.drawable.home_pet_look);
+                homeText.setText("你好像挺好看的");
+                break;
+            case 2:
+                editor.putInt("mode",2);
+                homePet.setImageResource(R.drawable.home_pet_sleep);
+                homeText.setText("好困呐，我先睡一会");
+                break;
+            case 3:
+                editor.putInt("mode",3);
+                homePet.setImageResource(R.drawable.home_pet_write);
+                homeText.setText("我要给我的伙伴写封信");
+                break;
+        }
+        editor.apply();
+    }
+
+    public static String dateToString(Date time){
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
+        String ctime = formatter.format(time);
+        return ctime;
+     }
 
     private void initView(View root) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -87,12 +162,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         gymButton = root.findViewById(R.id.home_gym);
         homeText = root.findViewById(R.id.text_home);
         selectionText = root.findViewById(R.id.text_selection);
-        homeViewModel.getHomeText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                homeText.setText(s);
-            }
-        });
+        homePet = root.findViewById(R.id.home_pet);
         homeViewModel.getSelectionText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -102,12 +172,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         pref = getContext().getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = pref.edit();
-
         canteenButton.setOnClickListener(this);
         storeButton.setOnClickListener(this);
         playButton.setOnClickListener(this);
         studyButton.setOnClickListener(this);
         gymButton.setOnClickListener(this);
+
+        try{
+            int mode = pref.getInt("mode",0);
+            switch (mode){
+                case 0:
+                    homePet.setImageResource(R.drawable.home_pet_leave);
+                    homeText.setText("松鼠好像还没回家，再等等吧");
+                    break;
+                case 1:
+                    homePet.setImageResource(R.drawable.home_pet_look);
+                    homeText.setText("你好像挺好看的");
+                    break;
+                case 2:
+                    homePet.setImageResource(R.drawable.home_pet_sleep);
+                    homeText.setText("好困呐，我先睡一会");
+                    break;
+                case 3:
+                    homePet.setImageResource(R.drawable.home_pet_write);
+                    homeText.setText("我要给我的伙伴写封信");
+                    break;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

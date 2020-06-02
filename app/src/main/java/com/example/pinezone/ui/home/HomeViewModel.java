@@ -10,9 +10,6 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> sText;
 
     public HomeViewModel() {
-        hText = new MutableLiveData<>();
-        hText.setValue("松鼠好像还没回家，再等等吧");
-
         sText = new MutableLiveData<>();
         sText.setValue("> 今天打算去哪里逛逛呢 <");
     }

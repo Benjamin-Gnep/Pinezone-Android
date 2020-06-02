@@ -37,7 +37,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/text_selection"
-        android:src="@drawable/home_pet"
+        android:src="@drawable/home_pet_leave"
         app:layout_constraintVertical_chainStyle="packed"
         />
 
