@@ -212,8 +212,7 @@
         app:layout_constraintRight_toLeftOf="@id/home_pet_info"
         android:background="@drawable/button_line_shape_dark"
         android:drawableStart="@drawable/ic_canteen"
-        android:drawableLeft="@drawable/ic_canteen"
-        android:paddingLeft="12dp"/>
+        android:drawableLeft="@drawable/ic_canteen"/>
 
     <Button
         android:id="@+id/home_pet_info"
@@ -225,8 +224,7 @@
         app:layout_constraintRight_toLeftOf="@id/home_bag"
         android:background="@drawable/button_line_shape_dark"
         android:drawableStart="@drawable/ic_pet"
-        android:drawableLeft="@drawable/ic_pet"
-        android:paddingLeft="12dp"/>
+        android:drawableLeft="@drawable/ic_pet"/>
 
     <Button
         android:id="@+id/home_bag"

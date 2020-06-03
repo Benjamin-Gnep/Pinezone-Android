@@ -142,7 +142,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 newDate = new Date(System.currentTimeMillis() + i);
                 editor.putString("date",dateToString(newDate));
                 editor.apply();
-                homeText.setText("松鼠好像还没回家，再等等吧");
+                homeText.setText("松鼠出去旅游了还没回家，再等等吧");
                 break;
             case 1:
                 editor.putInt("mode",1);
@@ -155,7 +155,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 newDate = new Date(System.currentTimeMillis() + i);
                 editor.putString("date",dateToString(newDate));
                 editor.apply();
-                homeText.setText("你好像挺好看的");
+                homeText.setText("欸，你好像挺好看的");
                 break;
             case 2:
                 editor.putInt("mode",2);
@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 newDate = new Date(System.currentTimeMillis() + i);
                 editor.putString("date",dateToString(newDate));
                 editor.apply();
-                homeText.setText("好困呐，我先睡一会");
+                homeText.setText("好困呐，我先睡一会哇");
                 break;
             case 3:
                 editor.putInt("mode",3);
@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 newDate = new Date(System.currentTimeMillis() + i);
                 editor.putString("date",dateToString(newDate));
                 editor.apply();
-                homeText.setText("我要给我的伙伴写封信");
+                homeText.setText("昨天碰到了小青蛙，我要给他写封信");
                 break;
         }
         editor.apply();
@@ -351,10 +351,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.home_food:
+                Intent intent = new Intent(getContext(),FoodActivity.class);
+                startActivity(intent);
                 break;
             case R.id.home_bag:
+                intent = new Intent(getContext(),BagActivity.class);
+                startActivity(intent);
                 break;
             case R.id.home_pet_info:
+                intent = new Intent(getContext(),PetInfoActivity.class);
+                startActivity(intent);
                 break;
         }
     }
