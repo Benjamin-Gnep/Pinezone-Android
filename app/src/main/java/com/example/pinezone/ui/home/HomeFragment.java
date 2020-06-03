@@ -48,6 +48,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button storeButton;
     private Button studyButton;
     private Button gymButton;
+    private Button petInfoButton;
+    private Button bagButton;
+    private Button foodButton;
+    private TextView canteenButtonTextView;
+    private TextView playButtonTextView;
+    private TextView storeButtonTextView;
+    private TextView studyButtonTextView;
+    private TextView gymButtonTextView;
+    private TextView petInfoButtonTextView;
+    private TextView bagButtonTextView;
+    private TextView foodButtonTextView;
+
+
     private ImageButton achievementButton;
     private ImageButton searchButton;
     private TextView homeText;
@@ -192,12 +205,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         homePet = root.findViewById(R.id.home_pet);
         achievementButton = root.findViewById(R.id.home_achievement);
         searchButton = root.findViewById(R.id.home_search);
-        homeViewModel.getSelectionText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                selectionText.setText(s);
-            }
-        });
+        petInfoButton = root.findViewById(R.id.home_pet_info);
+        foodButton = root.findViewById(R.id.home_food);
+        bagButton = root.findViewById(R.id.home_bag);
+
+        canteenButtonTextView = root.findViewById(R.id.text_canteen);
+        storeButtonTextView = root.findViewById(R.id.text_store);
+        playButtonTextView = root.findViewById(R.id.text_play);
+        studyButtonTextView = root.findViewById(R.id.text_study);
+        gymButtonTextView = root.findViewById(R.id.text_gym);
+        petInfoButtonTextView = root.findViewById(R.id.text_pet_info);
+        foodButtonTextView = root.findViewById(R.id.text_food);
+        bagButtonTextView = root.findViewById(R.id.text_bag);
+
+        selectionText.setText("> 今天打算去哪里逛逛呢 <");
 
         pref = getContext().getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = pref.edit();
@@ -209,25 +230,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         searchButton.setOnClickListener(this);
         achievementButton.setOnClickListener(this);
         homePet.setOnClickListener(this);
+        petInfoButton.setOnClickListener(this);
+        bagButton.setOnClickListener(this);
+        foodButton.setOnClickListener(this);
+        petInfoButton.setVisibility(View.INVISIBLE);
+        bagButton.setVisibility(View.INVISIBLE);
+        foodButton.setVisibility(View.INVISIBLE);
+        petInfoButtonTextView.setVisibility(View.INVISIBLE);
+        foodButtonTextView.setVisibility(View.INVISIBLE);
+        bagButtonTextView.setVisibility(View.INVISIBLE);
 
         try{
             int mode = pref.getInt("mode",0);
             switch (mode){
                 case 0:
                     homePet.setImageResource(R.drawable.home_pet_leave);
-                    homeText.setText("松鼠好像还没回家，再等等吧");
+                    homeText.setText("松鼠出去旅游了还没回家，再等等吧");
                     break;
                 case 1:
                     homePet.setImageResource(R.drawable.home_pet_look);
-                    homeText.setText("你好像挺好看的");
+                    homeText.setText("欸，你好像挺好看的");
                     break;
                 case 2:
                     homePet.setImageResource(R.drawable.home_pet_sleep);
-                    homeText.setText("好困呐，我先睡一会");
+                    homeText.setText("好困呐，我先睡一会哇");
                     break;
                 case 3:
                     homePet.setImageResource(R.drawable.home_pet_write);
-                    homeText.setText("我要给我的伙伴写封信");
+                    homeText.setText("昨天碰到了小青蛙，我要给他写封信");
                     break;
             }
         }catch(Exception e){
@@ -280,7 +310,51 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(),"成就功能暂未开放",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.home_pet:
-                Toast.makeText(getContext(),"松鼠便当功能待开发",Toast.LENGTH_SHORT).show();
+                if(!homePet.isSelected()){
+                    homePet.setSelected(true);
+                    canteenButton.setVisibility(View.INVISIBLE);
+                    storeButton.setVisibility(View.INVISIBLE);
+                    playButton.setVisibility(View.INVISIBLE);
+                    studyButton.setVisibility(View.INVISIBLE);
+                    gymButton.setVisibility(View.INVISIBLE);
+                    petInfoButton.setVisibility(View.VISIBLE);
+                    bagButton.setVisibility(View.VISIBLE);
+                    foodButton.setVisibility(View.VISIBLE);
+                    canteenButtonTextView.setVisibility(View.INVISIBLE);
+                    storeButtonTextView.setVisibility(View.INVISIBLE);
+                    playButtonTextView.setVisibility(View.INVISIBLE);
+                    studyButtonTextView.setVisibility(View.INVISIBLE);
+                    gymButtonTextView.setVisibility(View.INVISIBLE);
+                    petInfoButtonTextView.setVisibility(View.VISIBLE);
+                    bagButtonTextView.setVisibility(View.VISIBLE);
+                    foodButtonTextView.setVisibility(View.VISIBLE);
+                    selectionText.setText("> 给你的松鼠准备一下行李吧 <");
+                }else {
+                    homePet.setSelected(false);
+                    canteenButton.setVisibility(View.VISIBLE);
+                    storeButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.VISIBLE);
+                    studyButton.setVisibility(View.VISIBLE);
+                    gymButton.setVisibility(View.VISIBLE);
+                    petInfoButton.setVisibility(View.INVISIBLE);
+                    bagButton.setVisibility(View.INVISIBLE);
+                    foodButton.setVisibility(View.INVISIBLE);
+                    canteenButtonTextView.setVisibility(View.VISIBLE);
+                    storeButtonTextView.setVisibility(View.VISIBLE);
+                    playButtonTextView.setVisibility(View.VISIBLE);
+                    studyButtonTextView.setVisibility(View.VISIBLE);
+                    gymButtonTextView.setVisibility(View.VISIBLE);
+                    petInfoButtonTextView.setVisibility(View.INVISIBLE);
+                    bagButtonTextView.setVisibility(View.INVISIBLE);
+                    foodButtonTextView.setVisibility(View.INVISIBLE);
+                    selectionText.setText("> 今天打算去哪里逛逛呢 <");
+                }
+                break;
+            case R.id.home_food:
+                break;
+            case R.id.home_bag:
+                break;
+            case R.id.home_pet_info:
                 break;
         }
     }

@@ -201,4 +201,80 @@
         android:text="健身房"
         android:textColor="@color/colorPrimaryDark"/>
 
+
+    <Button
+        android:id="@+id/home_food"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/home_pet_info"
+        android:background="@drawable/button_line_shape_dark"
+        android:drawableStart="@drawable/ic_canteen"
+        android:drawableLeft="@drawable/ic_canteen"
+        android:paddingLeft="12dp"/>
+
+    <Button
+        android:id="@+id/home_pet_info"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_food"
+        app:layout_constraintRight_toLeftOf="@id/home_bag"
+        android:background="@drawable/button_line_shape_dark"
+        android:drawableStart="@drawable/ic_pet"
+        android:drawableLeft="@drawable/ic_pet"
+        android:paddingLeft="12dp"/>
+
+    <Button
+        android:id="@+id/home_bag"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/line3"
+        app:layout_constraintTop_toBottomOf="@id/text_selection"
+        app:layout_constraintLeft_toRightOf="@id/home_pet_info"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/button_line_shape_dark"
+        android:drawableStart="@drawable/ic_bag"
+        android:drawableLeft="@drawable/ic_bag" />
+
+    <TextView
+        android:id="@+id/text_food"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/text_pet_info"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="便当"
+        android:textColor="@color/colorPrimaryDark"/>
+    <TextView
+        android:id="@+id/text_pet_info"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_store"
+        app:layout_constraintRight_toLeftOf="@id/text_study"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="松鼠"
+        android:textColor="@color/colorPrimaryDark"/>
+    <TextView
+        android:id="@+id/text_bag"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/H5"
+        app:layout_constraintTop_toBottomOf="@id/home_canteen"
+        app:layout_constraintLeft_toRightOf="@id/text_pet_info"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/line1"
+        android:gravity="center"
+        android:text="背包"
+        android:textColor="@color/colorPrimaryDark"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
