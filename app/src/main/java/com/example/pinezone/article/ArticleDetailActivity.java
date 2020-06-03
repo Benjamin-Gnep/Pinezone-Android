@@ -44,6 +44,7 @@ import com.example.pinezone.comment.CommentAdapter;
 import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.ui.publish.PublishActivityCollector;
+import com.example.pinezone.user.UserActivity;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
@@ -482,6 +483,19 @@ public class ArticleDetailActivity extends BasicActivity {
             public void onClick(View v) {
                 Log.e("TAG", "click");
                 showPopupComment();
+            }
+        });
+
+        detailAuthorName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserActivity.StartActivity(getBaseContext(),authorId);
+            }
+        });
+        detailAuthorImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserActivity.StartActivity(getBaseContext(),authorId);
             }
         });
 

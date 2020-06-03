@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".user.UserActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/mine_background"
+        android:scaleType="centerCrop"
+        />
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/mine_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srlPrimaryColor="@color/middleGray"
+        app:srlDragRate="0.4"
+        app:srlHeaderMaxDragRate="2"
+        app:srlHeaderHeight="80dp"
+        >
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/mine_scroll"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_style"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginTop="130dp">
+
+                    <Button
+                        android:id="@+id/edit_info_button"
+                        android:layout_width="64dp"
+                        android:layout_height="24dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:background="@drawable/button_line_shape_light"
+                        android:layout_marginRight="@dimen/line4"
+                        android:layout_marginTop="@dimen/line3"
+                        android:text="关 注"
+                        android:textColor="@color/subColor"
+                        android:textSize="@dimen/little"
+                        android:stateListAnimator="@null"
+                        />
+
+                    <TextView
+                        android:id="@+id/mine_user_name"
+                        android:layout_width="240dp"
+                        android:layout_height="32dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginTop="@dimen/line7"
+                        android:layout_marginLeft="@dimen/line4"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/mine_user_sign"
+                        android:layout_width="240dp"
+                        android:layout_height="24dp"
+                        app:layout_constraintTop_toBottomOf="@id/mine_user_name"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginTop="@dimen/line1"
+                        android:layout_marginLeft="@dimen/line4"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/little"
+                        android:textColor="@color/colorPrimaryLight"/>
+
+
+                    <Button
+                        android:id="@+id/sex_grade_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        app:layout_constraintTop_toBottomOf="@id/mine_user_sign"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:background="@drawable/tag_default_shape"
+                        android:layout_marginLeft="@dimen/line4"
+                        android:layout_marginTop="@dimen/line1"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/annotation"
+                        android:drawableLeft="@drawable/sex_tag"
+                        android:paddingLeft="@dimen/line1"
+                        android:clickable="false"
+                        />
+
+                    <Button
+                        android:id="@+id/location_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        app:layout_constraintTop_toBottomOf="@id/mine_user_sign"
+                        app:layout_constraintLeft_toRightOf="@id/sex_grade_tag"
+                        android:background="@drawable/tag_default_shape"
+                        android:layout_marginLeft="@dimen/line2"
+                        android:layout_marginTop="@dimen/line1"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/annotation"
+                        android:drawableLeft="@drawable/ic_location"
+                        android:paddingLeft="@dimen/line1"
+                        android:clickable="false"
+                        />
+
+                    <TextView
+                        android:id="@+id/fans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/sex_grade_tag"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginLeft="@dimen/line4"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/H3"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/fans"
+                        app:layout_constraintLeft_toRightOf="@id/fans"
+                        android:layout_marginLeft="@dimen/line1"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/little"
+                        android:text="粉丝"/>
+
+                    <TextView
+                        android:id="@+id/follow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/sex_grade_tag"
+                        app:layout_constraintLeft_toRightOf="@id/fans"
+                        android:layout_marginLeft="@dimen/line7"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/H3"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/follow"
+                        app:layout_constraintLeft_toRightOf="@id/follow"
+                        android:layout_marginLeft="@dimen/line1"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/little"
+                        android:text="关注"/>
+
+                    <TextView
+                        android:id="@+id/article"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/sex_grade_tag"
+                        app:layout_constraintLeft_toRightOf="@id/follow"
+                        android:layout_marginLeft="@dimen/line7"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/H3"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@id/article"
+                        app:layout_constraintLeft_toRightOf="@id/article"
+                        android:layout_marginLeft="@dimen/line1"
+                        android:layout_marginTop="@dimen/line2"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/little"
+                        android:text="动态"/>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/mine_article_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/fans"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_marginTop="@dimen/line2"
+                        android:paddingBottom="@dimen/line7"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/mine_user_image"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginLeft="@dimen/line4"
+                    app:riv_corner_radius="36dp"
+                    android:layout_marginStart="@dimen/line4"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <TextView
+        android:id="@+id/mine_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/white"
+        android:textSize="@dimen/H3"
+        android:text="阿苯不加奶盖"
+        android:textColor="@color/colorPrimary"
+        android:paddingTop="@dimen/line3"
+        android:gravity="center"
+        android:visibility="invisible"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
