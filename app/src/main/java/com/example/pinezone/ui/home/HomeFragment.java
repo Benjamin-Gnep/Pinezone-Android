@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button storeButton;
     private Button studyButton;
     private Button gymButton;
+    private ImageButton achievementButton;
+    private ImageButton searchButton;
     private TextView homeText;
     private TextView selectionText;
     private ImageView homePet;
@@ -187,6 +190,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         homeText = root.findViewById(R.id.text_home);
         selectionText = root.findViewById(R.id.text_selection);
         homePet = root.findViewById(R.id.home_pet);
+        achievementButton = root.findViewById(R.id.home_achievement);
+        searchButton = root.findViewById(R.id.home_search);
         homeViewModel.getSelectionText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -201,6 +206,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         playButton.setOnClickListener(this);
         studyButton.setOnClickListener(this);
         gymButton.setOnClickListener(this);
+        searchButton.setOnClickListener(this);
+        achievementButton.setOnClickListener(this);
+        homePet.setOnClickListener(this);
 
         try{
             int mode = pref.getInt("mode",0);
@@ -264,6 +272,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.nav_host_fragment,articleListFragment);
                 transaction.commit();
+                break;
+            case R.id.home_search:
+                Toast.makeText(getContext(),"搜索功能暂未开放",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.home_achievement:
+                Toast.makeText(getContext(),"成就功能暂未开放",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.home_pet:
+                Toast.makeText(getContext(),"松鼠便当功能待开发",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
