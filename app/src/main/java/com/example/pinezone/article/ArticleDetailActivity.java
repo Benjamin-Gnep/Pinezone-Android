@@ -72,7 +72,7 @@ public class ArticleDetailActivity extends BasicActivity {
 
     private List<String> detailImageGroup;
     private BaseQuickAdapter<String, BaseViewHolder> mBaseQuickAdapter;
-
+    private String authorImageSrc;
     private Long articleId;
     private int userId;
     private int authorId;
@@ -156,6 +156,7 @@ public class ArticleDetailActivity extends BasicActivity {
                             detailDate.setText("编辑于 " + article.getDatetime());
                             Glide.with(ArticleDetailActivity.this)
                                     .load(article.getUimg()).into(detailAuthorImage);
+                            authorImageSrc = article.getUimg();
                             for(int i = 0 ; i < article.getAimg().size();i++){
                                 detailImageGroup.add(article.getAimg().get(i).path);
                                 Log.e("TAG",article.getAimg().get(i).path );
@@ -489,13 +490,13 @@ public class ArticleDetailActivity extends BasicActivity {
         detailAuthorName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserActivity.StartActivity(getBaseContext(),authorId);
+                UserActivity.StartActivity(ArticleDetailActivity.this,authorId,authorImageSrc);
             }
         });
         detailAuthorImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserActivity.StartActivity(getBaseContext(),authorId);
+                UserActivity.StartActivity(ArticleDetailActivity.this,authorId,authorImageSrc);
             }
         });
 

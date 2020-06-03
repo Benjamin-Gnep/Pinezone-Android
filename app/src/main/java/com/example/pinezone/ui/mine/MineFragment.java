@@ -223,6 +223,7 @@ public class MineFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 userName.setText(s);
+                mineActionBar.setText(s);
             }
         });
         mineViewModel.getUserSign().observe(getViewLifecycleOwner(), new Observer<String>() {

@@ -24,44 +24,50 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleAdapterPro;
 import com.example.pinezone.article.ArticleDetailActivity;
 import com.example.pinezone.config.ArticleService;
+import com.example.pinezone.config.UserService;
 import com.example.pinezone.ui.mine.MineFragment;
 import com.example.pinezone.ui.mine.MineInfo;
 import com.example.pinezone.ui.mine.MineViewModel;
 import com.example.pinezone.ui.setting.SettingsActivity;
+import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends BasicActivity {
 
-    private static final String TAG = "MineFragment";
+    private static final String TAG = "UserActivity";
 
     private int page = 1;
 
     private int uid;
+    private String uimg;
     private ImageButton setting;
     private ImageButton QRcode;
     private Button followBotton;
 
-    private MineViewModel mineViewModel;
     private TextView userName;
     private TextView userSign;
     private ImageView userImage;
@@ -78,9 +84,10 @@ public class UserActivity extends AppCompatActivity {
     private TextView mineActionBar;
     private ArticleAdapterPro mineArticleAdapter;
 
-    public static void StartActivity(Context context, int uid){
+    public static void StartActivity(Context context, int uid,String uimg){
         Intent intent = new Intent(context, UserActivity.class);
         intent.putExtra("uid",uid);
+        intent.putExtra("uimg",uimg);
         context.startActivity(intent);
     }
 
@@ -90,7 +97,9 @@ public class UserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user);
         Intent intent = getIntent();
         uid = intent.getIntExtra("uid",0);
+        uimg = intent.getStringExtra("uimg");
         initView();
+        getUserInfo();
         final StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL){
                     @Override
@@ -159,6 +168,54 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
+    private void getUserInfo() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+
+        final UserService userService = retrofit.create(UserService.class);
+
+        Call<ResponseBody> call = userService.getUser(uid);
+
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    assert response.body() != null;
+                    String s = response.body().string();
+                    Gson gson = new Gson();
+
+                    User user = gson.fromJson(s,User.class);
+                    mineActionBar.setText(user.getName());
+                    userName.setText(user.getName());
+                    userSign.setText(user.getProfile());
+                    if(user.getSex() == 1){
+                        userGradeSex.setSelected(true);
+                    } else {
+                        userGradeSex.setSelected(false);
+                    }
+                    userGradeSex.setText(user.getLevel() + "级");
+                    userLocation.setText("福建 福州");
+                    userFans.setText("101");
+                    userFollow.setText("58");
+                    userArticle.setText("23");
+                    Glide.with(UserActivity.this).load(uimg).into(userImage);
+                    user.userShow();
+
+                    Log.e(TAG, "onResponse: " + s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure: "+t.toString() );
+            }
+        });
+    }
+
     private void getMineArticle(final int page) {
         final List<Article> articleList = new ArrayList<>();
         Retrofit retrofit = new Retrofit.Builder()
@@ -195,7 +252,6 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        mineViewModel = new ViewModelProvider(this).get(MineViewModel.class);
         scrollView = findViewById(R.id.mine_scroll);
         refreshLayout = findViewById(R.id.mine_refresh);
         mineActionBar = findViewById(R.id.mine_action_bar);
@@ -222,8 +278,8 @@ public class UserActivity extends AppCompatActivity {
         followBotton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserActivity.this, MineInfo.class);
-                startActivity(intent);
+                Toast.makeText(UserActivity.this,"关注功能暂未开发",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
