@@ -102,15 +102,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             Log.e("TAG", dateToString(timeStore) );
             if(time.after(timeStore) || timeStore.equals(time)){
                 Random rand = new Random();
-                //18000000 7200000
-                int i = rand.nextInt(10000);//五小时
-                while(i < 5000){//一小时
-                    i = rand.nextInt(10000);
-                }
-                Date newDate = new Date(System.currentTimeMillis() + i);
                 chooseMode(rand.nextInt(4));
-                editor.putString("date",dateToString(newDate));
-                editor.apply();
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -119,26 +111,58 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void chooseMode(int nextInt) {
-        Log.e("TAG", "开始重置" );
+        Random rand = new Random();
+        Date newDate;
+        int i;
         switch (nextInt){
             case 0:
                 editor.putInt("mode",0);
                 homePet.setImageResource(R.drawable.home_pet_leave);
+                //18000000 7200000
+                i = rand.nextInt(18000000);
+                while(i < 7200000){
+                    i = rand.nextInt(18000000);
+                }
+                newDate = new Date(System.currentTimeMillis() + i);
+                editor.putString("date",dateToString(newDate));
+                editor.apply();
                 homeText.setText("松鼠好像还没回家，再等等吧");
                 break;
             case 1:
                 editor.putInt("mode",1);
                 homePet.setImageResource(R.drawable.home_pet_look);
+                //18000000 7200000
+                i = rand.nextInt(30000);//30s
+                while(i < 20000){//20s
+                    i = rand.nextInt(30000);
+                }
+                newDate = new Date(System.currentTimeMillis() + i);
+                editor.putString("date",dateToString(newDate));
+                editor.apply();
                 homeText.setText("你好像挺好看的");
                 break;
             case 2:
                 editor.putInt("mode",2);
                 homePet.setImageResource(R.drawable.home_pet_sleep);
+                i = rand.nextInt(7200000);
+                while(i < 3600000){
+                    i = rand.nextInt(7200000);
+                }
+                newDate = new Date(System.currentTimeMillis() + i);
+                editor.putString("date",dateToString(newDate));
+                editor.apply();
                 homeText.setText("好困呐，我先睡一会");
                 break;
             case 3:
                 editor.putInt("mode",3);
                 homePet.setImageResource(R.drawable.home_pet_write);
+                i = rand.nextInt(7200000);
+                while(i < 3600000){
+                    i = rand.nextInt(7200000);
+                }
+                newDate = new Date(System.currentTimeMillis() + i);
+                editor.putString("date",dateToString(newDate));
+                editor.apply();
                 homeText.setText("我要给我的伙伴写封信");
                 break;
         }

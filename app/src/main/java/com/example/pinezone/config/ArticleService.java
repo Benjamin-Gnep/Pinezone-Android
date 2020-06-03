@@ -99,4 +99,10 @@ public interface ArticleService {
     @HTTP(method = "DELETE", path = "article", hasBody = true)
     @FormUrlEncoded
     Call<ResponseBody> deleteArticle(@Field("aid") Long aid);
+
+    @Multipart
+    @POST("report")
+    Call<ResponseBody> report(@Part("uid") RequestBody uid,
+                              @Part("aid") RequestBody aid,
+                              @Part("content") RequestBody content);
 }

@@ -89,6 +89,7 @@ public class ArticleDetailActivity extends BasicActivity {
     private Button detailDeleteButton;
     private Button detailUpdateButton;
     private Button addCommentButton;
+    private Button reportButton;
     //评论列表逻辑
     private RecyclerView commentRecyclerView;
     private CommentAdapter commentAdapter;
@@ -220,6 +221,7 @@ public class ArticleDetailActivity extends BasicActivity {
         scrollView = findViewById(R.id.detail_scroll_view);
         refreshLayout = findViewById(R.id.detail_refresh);
         commentNum = findViewById(R.id.comment_num_text);
+        reportButton = findViewById(R.id.detail_report);
 
         detailImageView = findViewById(R.id.detail_image_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -396,6 +398,82 @@ public class ArticleDetailActivity extends BasicActivity {
                         }
                     });
                 }
+            }
+        });
+
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ArticleDetailActivity.this);
+
+                builder.setTitle("请选择举报内容");
+
+                final String items[] = {
+                        "发布与主题不相关的内容",
+                        "营销或剽窃内容",
+                        "淫秽图片或不当言论",
+                        "恶意或虚假宣传",
+                        "其他原因"};
+
+                final boolean [] checkedItems ={false,false,false,false,false};
+
+                builder.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                    }
+                });
+
+                //把选中的挑选出来
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuffer sb = new StringBuffer();
+                        //把选中的条目的数据取出来
+                        for (int i = 0; i <checkedItems.length ; i++) {
+                            //判断下选中的
+                            if(checkedItems[i]){
+                                String report = items[i];
+                                sb.append(report+"");
+                            }
+                            //Toast.makeText(getApplicationContext(),sb.toString(),Toast.LENGTH_LONG).show();
+                            //2.然后把对话框关闭
+                            dialog.dismiss();
+                        }
+                        final ArticleService articleService = retrofit.create(ArticleService.class);
+                        RequestBody uidBody = RequestBody.create
+                                (MediaType.parse("multipart/form-data"),String.valueOf(MainActivity.getUid()));
+                        RequestBody aidBody = RequestBody.create
+                                (MediaType.parse("multipart/form-data"),String.valueOf(articleId));
+                        RequestBody contentBody = RequestBody.create
+                                (MediaType.parse("multipart/form-data"),sb.toString());
+                        Call<ResponseBody> call = articleService.report(uidBody,aidBody,contentBody);
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if(response.body()!=null){
+                                    Log.e("举报回执", response.body().toString() );
+                                    Toast.makeText(getApplicationContext(),
+                                            "举报成功，请等待管理员审核"
+                                            ,Toast.LENGTH_SHORT).show();
+                                    detailStarButton.setClickable(true);
+                                }else{
+                                    Toast.makeText(ArticleDetailActivity.this,"参数错误",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Toast.makeText(ArticleDetailActivity.this,"网络错误",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+                //一样要show
+                builder.show();
             }
         });
 
