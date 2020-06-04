@@ -218,9 +218,9 @@ public class ArticleDetailActivity extends BasicActivity {
             @Override
             public void onResponse(Call<Squirrel> call, Response<Squirrel> response) {
                 pinecone[0] = response.body().getPinecone();
-                int x = pinecone[0] + 5;
+                int x = pinecone[0] + 2;
                 ListAdapter.setPinecone(x);
-                Toast.makeText(ArticleDetailActivity.this,"浏览文章，收集5颗松果",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ArticleDetailActivity.this,"浏览文章，收集2颗松果",Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onFailure(Call<Squirrel> call, Throwable t) {
