@@ -37,4 +37,14 @@ public interface SquirrelService {
     @POST("squirrel/pinecone")
     Call<ResponseBody> setPinecone(@Part("uid") RequestBody uid,
                                    @Part("pinecone") RequestBody pinecone);
+
+    @Multipart
+    @POST("squirrel/hp")
+    Call<ResponseBody> setHp(@Part("uid") RequestBody uid,
+                             @Part("hp") RequestBody hp);
+
+    @GET("squirrel/travel")
+    Call<TravelResponse> travel(@Query("hp") int hp,
+                              @Query("achievement") float achievement,
+                              @Query("companion") float companion);
 }

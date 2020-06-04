@@ -34,7 +34,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private List<ThingsItem> list;
     private int pineconeNum;
     private Context context;
-    public ListAdapter(List<ThingsItem> list){
+    ListAdapter(List<ThingsItem> list){
         this.list = list;
     }
 
@@ -67,7 +67,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                 String s;
                                 response.body().show();
                                 pineconeNum = response.body().getPinecone();
-                                if(response.body().getFood() == 0){
+                                if(response.body().getFood() == 1){
                                     s = "便当盒现在是空的，";
                                 }else {
                                     s = "便当盒里已有食物，";
@@ -105,7 +105,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                 String s;
                                 response.body().show();
                                 pineconeNum = response.body().getPinecone();
-                                if(response.body().getCompanion() == 0 && response.body().getAchievement() == 0){
+                                if(response.body().getCompanion() == 1 && response.body().getAchievement() == 1){
                                     s = "背包现在是空的，";
                                 }else {
                                     s = "背包里已有物品，";
@@ -143,7 +143,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                                 String s;
                                 response.body().show();
                                 pineconeNum = response.body().getPinecone();
-                                if(response.body().getCompanion() == 0 && response.body().getAchievement() == 0){
+                                if(response.body().getCompanion() == 1 && response.body().getAchievement() == 1){
                                     s = "背包现在是空的，";
                                 }else {
                                     s = "背包里已有物品，";
@@ -348,5 +348,124 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             value = itemView.findViewById(R.id.pinecone_tv);
             this.itemView = itemView;
         }
+    }
+
+    public static void setAchievement(int attr){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        RequestBody achievementBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(attr));
+        Call<ResponseBody> call = squirrelService.setAchievement(uidBody,achievementBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void setFood(int attr){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        RequestBody foodBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(attr));
+        Call<ResponseBody> call = squirrelService.setFood(uidBody,foodBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void setCompanion(int attr){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        RequestBody companionBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(attr));
+        Call<ResponseBody> call = squirrelService.setCompanion(uidBody,companionBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void setHp(int attr){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        RequestBody hpBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(attr));
+        Call<ResponseBody> call = squirrelService.setHp(uidBody,hpBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void setPinecone(int attr){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
+        RequestBody uidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(MainActivity.getUid()));
+        RequestBody pineconeBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),
+                        String.valueOf(attr));
+        Call<ResponseBody> call = squirrelService.setPinecone(uidBody,pineconeBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
     }
 }
