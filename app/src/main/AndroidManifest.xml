@@ -23,7 +23,7 @@
         android:roundIcon="@mipmap/act_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.home.PetInfoActivity"></activity>
+        <activity android:name=".squirrel.PetInfoActivity"></activity>
         <activity android:name=".squirrel.FoodActivity" />
         <activity android:name=".squirrel.BagActivity" />
         <activity android:name=".user.UserActivity" />

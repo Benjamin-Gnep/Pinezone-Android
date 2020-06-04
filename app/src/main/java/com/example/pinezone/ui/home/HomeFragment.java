@@ -28,6 +28,7 @@ import com.example.pinezone.article.ArticleListFragment;
 import com.example.pinezone.config.ArticleConstant;
 import com.example.pinezone.squirrel.BagActivity;
 import com.example.pinezone.squirrel.FoodActivity;
+import com.example.pinezone.squirrel.PetInfoActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -357,7 +358,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.home_pet_info:
-                intent = new Intent(getContext(),PetInfoActivity.class);
+                intent = new Intent(getContext(), PetInfoActivity.class);
                 startActivity(intent);
                 break;
         }

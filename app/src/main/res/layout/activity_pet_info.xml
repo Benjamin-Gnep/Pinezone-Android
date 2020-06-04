@@ -4,6 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.PetInfoActivity">
+    android:background="@color/white"
+    tools:context=".squirrel.PetInfoActivity">
+    <include layout="@layout/pinezone_action_bar"
+        android:id="@+id/action_bar"
+        android:layout_marginTop="@dimen/line2"
+        android:layout_height="80dp"
+        android:layout_width="match_parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_style"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action_bar"
+        android:layout_marginTop="@dimen/line2"
+        android:paddingTop="@dimen/line2"
+        android:paddingBottom="@dimen/line6"
+        android:orientation="vertical">
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/name_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="输入昵称成为独一无二的自己"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="松鼠名" />
+
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/pinecone_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="松果数"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="松果数" />
+
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/hp_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="体力值"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="体力值" />
+
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/hp_plus_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="体力加成"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="体力加成" />
+
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/achievement_plus_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="成就加成"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="成就加成" />
+
+        <com.example.pinezone.config.ItemGroup
+            android:id="@+id/companion_plus_ig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:edt_hint_content="伙伴加成"
+            app:jt_visible="false"
+            app:paddingLeft="15dp"
+            app:title="伙伴加成" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
