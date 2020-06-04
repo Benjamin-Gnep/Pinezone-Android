@@ -16,20 +16,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.pinezone.ActivityCollector;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
 import com.example.pinezone.article.ArticleListFragment;
 import com.example.pinezone.config.ArticleConstant;
+import com.example.pinezone.squirrel.BagActivity;
+import com.example.pinezone.squirrel.FoodActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -351,11 +349,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.home_food:
-                Intent intent = new Intent(getContext(),FoodActivity.class);
+                Intent intent = new Intent(getContext(), FoodActivity.class);
                 startActivity(intent);
                 break;
             case R.id.home_bag:
-                intent = new Intent(getContext(),BagActivity.class);
+                intent = new Intent(getContext(), BagActivity.class);
                 startActivity(intent);
                 break;
             case R.id.home_pet_info:

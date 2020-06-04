@@ -24,8 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.home.PetInfoActivity"></activity>
-        <activity android:name=".ui.home.FoodActivity" />
-        <activity android:name=".ui.home.BagActivity" />
+        <activity android:name=".squirrel.FoodActivity" />
+        <activity android:name=".squirrel.BagActivity" />
         <activity android:name=".user.UserActivity" />
         <activity android:name=".ui.mine.EditTextActivity" />
         <activity android:name=".ui.mine.MineInfo" />
