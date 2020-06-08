@@ -12,12 +12,24 @@ MobSDK {
 }
 
 android {
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    signingConfigs {
+        release {
+            storePassword '819951272'
+            keyPassword '819951272'
+            keyAlias = 'Pinezone'
+            storeFile file('D:\\AndroidStudio\\work\\Pinezone\\app\\app_release.jks')
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.example.pinezone"
-        minSdkVersion 26
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -30,6 +42,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

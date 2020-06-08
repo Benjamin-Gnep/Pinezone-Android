@@ -348,7 +348,6 @@ public class MineInfo extends BasicActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 if(response.body()==null){
                     Toast.makeText(getContext(),"参数错误",
                             Toast.LENGTH_SHORT).show();

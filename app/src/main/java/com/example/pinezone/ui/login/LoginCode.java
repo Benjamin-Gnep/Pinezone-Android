@@ -116,11 +116,9 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
                         Toast.makeText(getApplicationContext(), "验证码输入正确",
                                 Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(LoginCode.this, MainActivity.class));
                         editor.putString("account",phoneNum);//把账号持久化储存
                         editor.apply();
                         initUserInfo(phoneNum);
-                        LoginActivityCollector.finishAll();
                     }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {//获取验证码成功
                         Toast.makeText(getApplicationContext(), "验证码已经发送",
                                 Toast.LENGTH_SHORT).show();
@@ -267,6 +265,8 @@ public class LoginCode extends BasicActivity implements View.OnClickListener {
                                 editor.putString("path",path);
                                 Log.e(TAG, path);
                                 editor.apply();
+                                startActivity(new Intent(LoginCode.this, MainActivity.class));
+                                LoginActivityCollector.finishAll();
                             } catch (JSONException | IOException e) {
                                 e.printStackTrace();
                             }

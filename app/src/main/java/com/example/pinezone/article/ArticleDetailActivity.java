@@ -72,13 +72,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ArticleDetailActivity extends BasicActivity {
     private static String ARTICLE_ID = "articleId";
-    private static String USER_ID = "userId";
 
     private List<String> detailImageGroup;
     private BaseQuickAdapter<String, BaseViewHolder> mBaseQuickAdapter;
     private String authorImageSrc;
     private Long articleId;
-    private int userId;
     private int authorId;
     private ImageView detailAuthorImage;
     private TextView detailAuthorName;
@@ -106,15 +104,15 @@ public class ArticleDetailActivity extends BasicActivity {
     private static int currentPage = 1;
 //    private BannerPagerView detailImageView;
 
+
     private Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://111.230.173.4:8081/v1/")
             .addConverterFactory(GsonConverterFactory.create()) //添加Gson
             .build();
 
-    public static void StartActivity(Context context, Long articleId, int userId){
+    public static void StartActivity(Context context, Long articleId){
         Intent intent = new Intent(context,ArticleDetailActivity.class);
         intent.putExtra(ARTICLE_ID,articleId);
-        intent.putExtra(USER_ID,userId);
         context.startActivity(intent);
     }
 
@@ -131,7 +129,6 @@ public class ArticleDetailActivity extends BasicActivity {
         Intent intent = getIntent();
         if(intent != null){
             articleId = intent.getLongExtra(ARTICLE_ID,0);
-            userId = intent.getIntExtra(USER_ID,0);
         }else {
             Toast.makeText(ArticleDetailActivity.this,"获取文章错误"
                     ,Toast.LENGTH_SHORT).show();
@@ -142,11 +139,10 @@ public class ArticleDetailActivity extends BasicActivity {
 
     private void loadArticle() {
         final ArticleService articleService = retrofit.create(ArticleService.class);
-        Call<Article> call = articleService.getArticle(articleId, userId);
+        Call<Article> call = articleService.getArticle(articleId, MainActivity.getUid());
         call.enqueue(new Callback<Article>() {
             @Override
             public void onResponse(@NonNull Call<Article> call, @NonNull final Response<Article> response) {
-                Log.e("TAG", response.body().toString() );
                 final Article article = response.body();
                 runOnUiThread(new Runnable() {
                     @Override

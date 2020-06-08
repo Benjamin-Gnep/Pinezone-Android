@@ -136,8 +136,7 @@ public class UserActivity extends BasicActivity {
                         ConstraintLayout layout = (ConstraintLayout) view.getParent();
                         TextView textView = layout.findViewById(R.id.article_id);
                         Long aid = Long.parseLong(textView.getText().toString());
-                        int uid = MainActivity.getUid();
-                        ArticleDetailActivity.StartActivity(UserActivity.this,aid,uid);
+                        ArticleDetailActivity.StartActivity(UserActivity.this,aid);
                         break;
                 }
             }

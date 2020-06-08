@@ -152,8 +152,8 @@ public class ArticleListFragment extends Fragment {
                         ConstraintLayout layout = (ConstraintLayout) view.getParent();
                         TextView textView = layout.findViewById(R.id.article_id);
                         Long aid = Long.parseLong(textView.getText().toString());
-                        int uid = MainActivity.getUid();
-                        ArticleDetailActivity.StartActivity(getActivity(),aid,uid);
+                        Log.e(TAG, aid+" is selected");
+                        ArticleDetailActivity.StartActivity(getActivity(),aid);
                         break;
                 }
             }
