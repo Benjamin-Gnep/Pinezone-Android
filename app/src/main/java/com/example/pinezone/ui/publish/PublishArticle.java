@@ -232,7 +232,11 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                     break;
                 }
                 publish.setClickable(false);
-                publishArticle();
+                if(articleId != 0){
+                    updateArticle();
+                }else{
+                    publishArticle();
+                }
                 break;
             case R.id.back_button:
                 finish();
@@ -246,26 +250,69 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         }
     }
 
-    private void publishArticle() {
+    private void updateArticle() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .build();
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+        RequestBody aidBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),String.valueOf(articleId));
+        RequestBody titleBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),title.getText().toString());
+        RequestBody contentBody = RequestBody.create
+                (MediaType.parse("multipart/form-data"),content.getText().toString());
 
-        if (ContextCompat.checkSelfPermission(PublishArticle.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE ) == PackageManager.PERMISSION_GRANTED){
-            //有权限的情况
-        }else{
-            //没有权限，进行权限申请
-            //REQ是本次请求的辨认编号,即 requestCode
-            ActivityCompat.requestPermissions(PublishArticle.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQ);
+        List<MultipartBody.Part> fileList = new ArrayList<>();
+        for(int i = 0;i < mAdapter.getData().size();i++){
+            File file = new File(mAdapter.getData().get(i).getCompressPath());
+            Log.e(TAG, file.getPath());
+            RequestBody fileRequestBody =
+                    RequestBody.create(MediaType.parse("multipart/form-data"),file);
+            MultipartBody.Part filePart =
+                    MultipartBody.Part.createFormData("imgs", file.getName(), fileRequestBody);
+            fileList.add(filePart);
         }
+        Call<ResponseBody> call = articleService.updateArticle(aidBody,fileList,titleBody,contentBody);
 
-        //HttpLoggingInterceptor打印流程
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override public void log(String message) {
-                Log.d("MyTAG", "OkHttp: " + message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                if(response.body()==null){
+                    publish.setClickable(true);
+                    Toast.makeText(getContext(),"图片过大或参数错误",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.e(TAG, response.body().toString() );
+                    clearCache();
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    builder.setTitle("修改成功");
+                    builder.setMessage("你已经成功修改文章了奥，待管理员审核后便会出现在文章列表中，你可以前往" +
+                            "我的页面进行查看并重新编辑文章");
+                    builder.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    PublishActivityCollector.finishAll();
+                                }
+                            });
+                    AlertDialog dialog=builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, t.toString());
+                Toast.makeText(getContext(),"网络错误",
+                        Toast.LENGTH_SHORT).show();
             }
         });
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okClient = new OkHttpClient.Builder().addInterceptor(logging).build();
+    }
 
+    private void publishArticle() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://111.230.173.4:8081/v1/")
                 .build();

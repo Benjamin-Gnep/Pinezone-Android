@@ -185,11 +185,13 @@ public class ArticleDetailActivity extends BasicActivity {
                                 detailUpdateButton.setVisibility(View.INVISIBLE);
                             }
                             boolean isAuthor = false;
-                            if(authorId == MainActivity.getUid()){
+                            if(article.getUid() == MainActivity.getUid()){
+                                Log.e("TAG", "could delete" );
                                 isAuthor = true;
                             }
                             commentAdapter.couldDelete(isAuthor);
                             setAdapter();
+                            getCommentList(requestPage);
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -585,7 +587,7 @@ public class ArticleDetailActivity extends BasicActivity {
         commentRecyclerView.setAdapter(commentAdapter);
         currentPage = 1;
         requestPage = 1;
-        getCommentList(requestPage);
+
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

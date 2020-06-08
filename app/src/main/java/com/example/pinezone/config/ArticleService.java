@@ -19,6 +19,7 @@ import retrofit2.http.HTTP;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -105,4 +106,11 @@ public interface ArticleService {
     Call<ResponseBody> report(@Part("uid") RequestBody uid,
                               @Part("aid") RequestBody aid,
                               @Part("content") RequestBody content);
+
+    @Multipart
+    @PUT("article")
+    Call<ResponseBody> updateArticle(@Part("aid") RequestBody aid,
+                                     @Part List<MultipartBody.Part> imgs,
+                                     @Part("title") RequestBody title,
+                                     @Part("content") RequestBody content);
 }

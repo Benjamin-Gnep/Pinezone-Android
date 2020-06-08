@@ -47,7 +47,7 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
 
         ImageView userImage = helper.findView(R.id.comment_author_image);
         Button commentDelete = helper.findView(R.id.comment_delete);
-        if(couldDelete){
+        if(couldDelete || comment.getUid() == MainActivity.getUid()){
             commentDelete.setVisibility(View.VISIBLE);
         }
         Glide.with((getContext())).load(comment.getUimg()).into(userImage);
