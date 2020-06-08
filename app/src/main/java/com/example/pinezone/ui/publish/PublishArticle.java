@@ -18,6 +18,8 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
@@ -115,6 +117,10 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         } else {
             clearCache();
         }
+        //设置软键盘的弹出模式
+        Window win = getWindow();
+        win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         Intent intent = getIntent();
         articleType = intent.getIntExtra(ARTICLE_TYPE,1);
         setContentView(R.layout.activity_publish_article);
@@ -143,10 +149,38 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                             });
                     AlertDialog dialog=builder.create();
                     dialog.show();
-                }else{
-                    publish.setClickable(false);
-                    publishArticle();
+                    break;
                 }
+                if(content.length() < 150){
+                    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+                    builder.setTitle("你怎么那么短");
+                    builder.setMessage("多写一点吧，最少写个150字吧？这么少发出去都丢人啊！");
+                    builder.setPositiveButton("马上去写",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                    AlertDialog dialog=builder.create();
+                    dialog.show();
+                    break;
+                }
+                if(content.length() > 3000){
+                    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+                    builder.setTitle("是不是太长了");
+                    builder.setMessage("已经超出3000字了，论文都没你长，别人看不下去的！");
+                    builder.setPositiveButton("马上去删",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                    AlertDialog dialog=builder.create();
+                    dialog.show();
+                    break;
+                }
+                publish.setClickable(false);
+                publishArticle();
                 break;
             case R.id.back_button:
                 finish();
@@ -178,7 +212,6 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://111.230.173.4:8081/v1/")
-                .client(okClient)
                 .build();
         final ArticleService articleService = retrofit.create(ArticleService.class);
 

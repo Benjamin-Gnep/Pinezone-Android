@@ -34,7 +34,7 @@
             android:label="@string/title_activity_settings" />
         <activity android:name=".ui.search.Search" />
         <activity android:name=".ui.achievement.Achievement" />
-        <activity android:name=".ui.publish.PublishArticle" />
+        <activity android:name=".ui.publish.PublishArticle"/>
         <activity android:name=".ui.publish.PublishType" />
         <activity android:name=".article.ArticleDetailActivity" />
         <activity
