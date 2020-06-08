@@ -38,12 +38,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.article.ArticleDetailActivity;
 import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.FullyGridLayoutManager;
 import com.example.pinezone.config.GlideEngine;
 import com.example.pinezone.config.GridImageAdapter;
 import com.example.pinezone.listener.DragListener;
 
+import com.example.pinezone.squirrel.Squirrel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.broadcast.BroadcastAction;
 import com.luck.picture.lib.broadcast.BroadcastManager;
@@ -90,6 +92,8 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
     private View actionBar;
     private Button backButton;
     private Button publish;
+    private TextView location;
+    private TextView topic;
     private EditText title;
     private EditText content;
 
@@ -104,6 +108,12 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
     private int REQ;
 
     public static void StartActivity(Context context, int type){
+        Intent intent = new Intent(context, PublishArticle.class);
+        intent.putExtra(ARTICLE_TYPE,type);
+        context.startActivity(intent);
+    }
+
+    public static void StartUpdateActivity(Context context, int type){
         Intent intent = new Intent(context, PublishArticle.class);
         intent.putExtra(ARTICLE_TYPE,type);
         context.startActivity(intent);
@@ -185,6 +195,10 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
             case R.id.back_button:
                 finish();
                 break;
+            case R.id.topic:
+            case R.id.location:
+                Toast.makeText(getContext(),"该功能暂未开放",
+                        Toast.LENGTH_SHORT).show();
             default:
                 break;
         }
@@ -256,6 +270,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
                     builder.setTitle("发布成功");
                     builder.setMessage("你已经成功发布文章了奥，待管理员审核后便会出现在文章列表中，你可以前往" +
                             "我的页面进行查看并重新编辑文章");
+                    Squirrel.addPinecone(PublishArticle.this,20);
                     builder.setPositiveButton("确定",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -286,6 +301,10 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         actionTitle.setText("");
         publish = actionBar.findViewById(R.id.next_button);
         publish.setText("发布");
+        location = findViewById(R.id.location);
+        topic = findViewById(R.id.topic);
+        location.setOnClickListener(this);
+        topic.setOnClickListener(this);
         backButton = actionBar.findViewById(R.id.back_button);
         publish.setOnClickListener(this);
         backButton.setOnClickListener(this);

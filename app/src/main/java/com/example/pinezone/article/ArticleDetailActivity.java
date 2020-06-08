@@ -235,6 +235,23 @@ public class ArticleDetailActivity extends BasicActivity {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(detailImageView);
 
+        //修改按钮逻辑
+        detailUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        //关注按钮逻辑
+        detailSubscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ArticleDetailActivity.this,"关注功能暂未开发",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //删除按钮逻辑
         detailDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -326,6 +343,7 @@ public class ArticleDetailActivity extends BasicActivity {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.body()!=null){
                                 Log.e("点赞回执", response.body().toString() );
+                                Squirrel.addPinecone(ArticleDetailActivity.this,2);
                                 detailLikeButton.setClickable(true);
                             }else{
                                 Toast.makeText(ArticleDetailActivity.this,"参数错误",
@@ -389,6 +407,7 @@ public class ArticleDetailActivity extends BasicActivity {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.body()!=null){
                                 Log.e("收藏回执", response.body().toString() );
+                                Squirrel.addPinecone(ArticleDetailActivity.this,2);
                                 detailStarButton.setClickable(true);
                             }else{
                                 Toast.makeText(ArticleDetailActivity.this,"参数错误",
