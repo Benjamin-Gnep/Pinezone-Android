@@ -47,6 +47,7 @@ import com.example.pinezone.config.SquirrelService;
 import com.example.pinezone.squirrel.ListAdapter;
 import com.example.pinezone.squirrel.Squirrel;
 import com.example.pinezone.ui.publish.PublishActivityCollector;
+import com.example.pinezone.ui.publish.PublishArticle;
 import com.example.pinezone.user.UserActivity;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -239,7 +240,7 @@ public class ArticleDetailActivity extends BasicActivity {
         detailUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                PublishArticle.StartUpdateActivity(ArticleDetailActivity.this,articleId);
             }
         });
 

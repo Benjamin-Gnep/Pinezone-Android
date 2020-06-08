@@ -35,9 +35,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.pinezone.BasicActivity;
 import com.example.pinezone.MainActivity;
 import com.example.pinezone.R;
+import com.example.pinezone.article.Article;
 import com.example.pinezone.article.ArticleDetailActivity;
 import com.example.pinezone.config.ArticleService;
 import com.example.pinezone.config.FullyGridLayoutManager;
@@ -79,6 +81,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PublishArticle extends BasicActivity implements View.OnClickListener{
     private static final String TAG = "PublishArticle";
@@ -86,6 +89,7 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
     private int maxSelectNum = 6;
     private int articleType;
     private TextView tvDeleteText;
+    private Long articleId;
 
     private RecyclerView mRecyclerView;
     private GridImageAdapter mAdapter;
@@ -113,9 +117,9 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         context.startActivity(intent);
     }
 
-    public static void StartUpdateActivity(Context context, int type){
+    public static void StartUpdateActivity(Context context, long aid){
         Intent intent = new Intent(context, PublishArticle.class);
-        intent.putExtra(ARTICLE_TYPE,type);
+        intent.putExtra("articleId",aid);
         context.startActivity(intent);
     }
 
@@ -132,11 +136,49 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
         win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         Intent intent = getIntent();
-        articleType = intent.getIntExtra(ARTICLE_TYPE,1);
+        articleId = intent.getLongExtra("articleId",0);
+        articleType = intent.getIntExtra(ARTICLE_TYPE,0);
         setContentView(R.layout.activity_publish_article);
         getWhiteStyle();
         initView();
+        if(articleId != 0){
+            setArticle(articleId);
+            publish.setText("保存");
+        }
         PublishActivityCollector.addActivity(this);
+    }
+
+    private void setArticle(Long articleId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://111.230.173.4:8081/v1/")
+                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
+                .build();
+        final ArticleService articleService = retrofit.create(ArticleService.class);
+        Call<Article> call = articleService.getArticle(articleId, MainActivity.getUid());
+        call.enqueue(new Callback<Article>() {
+            @Override
+            public void onResponse(@NonNull Call<Article> call, @NonNull final Response<Article> response) {
+                Log.e("TAG", response.body().toString() );
+                final Article article = response.body();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            title.setText(article.getTitle());
+                            content.setText(article.getContent());
+                            Toast.makeText(getContext(),"暂不支持重新编辑图片",
+                                    Toast.LENGTH_LONG).show();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+            @Override
+            public void onFailure(Call<Article> call, Throwable t) {
+
+            }
+        });
     }
 
 
@@ -555,10 +597,10 @@ public class PublishArticle extends BasicActivity implements View.OnClickListene
 //                        .isOriginalImageControl(true)
                         .isCompress(true)// 是否压缩
                         .compressQuality(20)// 图片压缩后输出质量 0~ 100
-//                        .isEnableCrop(true)// 是否裁剪
-//                        .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                        .isEnableCrop(true)// 是否裁剪
+                        .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
 //                        .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
-//                        .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
+                        .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                         .selectionData(mAdapter.getData())// 是否传入已选图片
                         .imageSpanCount(4)// 每行显示个数
                         .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
