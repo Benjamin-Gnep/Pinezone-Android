@@ -146,7 +146,6 @@ public class ArticleDetailActivity extends BasicActivity {
             @Override
             public void onResponse(@NonNull Call<Article> call, @NonNull final Response<Article> response) {
                 Log.e("TAG", response.body().toString() );
-                addPinecone();
                 final Article article = response.body();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -203,30 +202,6 @@ public class ArticleDetailActivity extends BasicActivity {
 
             }
         });
-    }
-
-    private void addPinecone() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://111.230.173.4:8081/v1/")
-                .addConverterFactory(GsonConverterFactory.create()) //添加Gson
-                .build();
-
-        final int[] pinecone = new int[1];
-        final SquirrelService squirrelService = retrofit.create(SquirrelService.class);
-        Call<Squirrel> call = squirrelService.getSquirrel(MainActivity.getUid());
-        call.enqueue(new Callback<Squirrel>() {
-            @Override
-            public void onResponse(Call<Squirrel> call, Response<Squirrel> response) {
-                pinecone[0] = response.body().getPinecone();
-                int x = pinecone[0] + 2;
-                ListAdapter.setPinecone(x);
-                Toast.makeText(ArticleDetailActivity.this,"浏览文章，收集2颗松果",Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onFailure(Call<Squirrel> call, Throwable t) {
-            }
-        });
-
     }
 
     private void initView() {
@@ -792,6 +767,8 @@ public class ArticleDetailActivity extends BasicActivity {
                         }else{
                             Toast.makeText(ArticleDetailActivity.this,"评论成功",
                                     Toast.LENGTH_SHORT).show();
+                            //评论增加松果
+                            Squirrel.addPinecone(ArticleDetailActivity.this,5);
                             currentPage = 1;
                             requestPage = 1;
                             getCommentList(requestPage);
