@@ -309,7 +309,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private void failed() {
         new AlertDialog.Builder(context).setTitle("穷鬼")
-                .setMessage("松果不够还想买东西？松果可以通过阅读文章、发布文章获得，赶快去赚松果吧！")
+                .setMessage("松果不够还想买东西？松果可以通过发布文章、评论点赞等渠道获得，赶快去赚松果吧！")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
