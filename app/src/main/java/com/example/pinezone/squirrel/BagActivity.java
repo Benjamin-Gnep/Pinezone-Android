@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,6 +36,13 @@ public class BagActivity extends BasicActivity {
         ConstraintLayout actionBarView = findViewById(R.id.action_bar);
         TextView textView = (TextView) actionBarView.findViewById(R.id.action_bar_title);
         textView.setText("背包");
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initButton() {

@@ -134,7 +134,13 @@ public class ArticleDetailActivity extends BasicActivity {
                     ,Toast.LENGTH_SHORT).show();
         }
         initView();
-
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void loadArticle() {

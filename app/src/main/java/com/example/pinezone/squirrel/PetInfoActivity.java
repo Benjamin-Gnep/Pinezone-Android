@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,13 @@ public class PetInfoActivity extends BasicActivity {
         achievementPlus = findViewById(R.id.achievement_plus_ig);
         companionPlus = findViewById(R.id.companion_plus_ig);
         initInfo();
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initInfo() {

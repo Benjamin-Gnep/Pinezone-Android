@@ -39,6 +39,13 @@ public class PublishType extends BasicActivity implements View.OnClickListener {
         study.setOnClickListener(this);
         gym.setOnClickListener(this);
         PublishActivityCollector.addActivity(this);
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
